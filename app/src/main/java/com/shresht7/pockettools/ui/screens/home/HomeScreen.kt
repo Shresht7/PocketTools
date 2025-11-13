@@ -33,6 +33,9 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate(Screen.Counter) }) {
                 Text("Counter")
             }
+            Button(onClick = { navController.navigate(Screen.TipCalculator) }) {
+                Text("Tip Calculator")
+            }
         }
     }
 }
