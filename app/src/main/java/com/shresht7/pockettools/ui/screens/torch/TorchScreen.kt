@@ -7,9 +7,16 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -31,9 +38,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 
@@ -136,22 +143,62 @@ fun TorchButton(context: Context) {
         }
     }
 
+    // Animation
+    val infiniteTransition = rememberInfiniteTransition(label = "glow")
+    val glowAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.2f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "glowAlpha"
+    )
+    val glowScale by infiniteTransition.animateFloat(
+        initialValue = 1.05f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "glowScale"
+    )
+
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(
-                color = if (isTorchOn) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
-                shape = CircleShape,
-            )
-            .clickable { isTorchOn = !isTorchOn },
+            .fillMaxSize().aspectRatio(1.0f),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = if (isTorchOn) "ON" else "OFF",
-            style = MaterialTheme.typography.headlineLarge,
-            color = if (isTorchOn) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-        )
+        // Fading Glow behind the button
+        if (isTorchOn) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(fraction = 0.5f)
+                    .scale(glowScale)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha),
+                        shape = CircleShape
+                    )
+            )
+        }
+
+        // Main Button
+        Box(
+            modifier = Modifier
+                .fillMaxSize(fraction = 0.3f)
+                .background(
+                    color = if (isTorchOn) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                    shape = CircleShape,
+                )
+                .clickable { isTorchOn = !isTorchOn },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = if (isTorchOn) "ON" else "OFF",
+                style = MaterialTheme.typography.headlineLarge,
+                color = if (isTorchOn) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+            )
+        }
     }
 }
 
