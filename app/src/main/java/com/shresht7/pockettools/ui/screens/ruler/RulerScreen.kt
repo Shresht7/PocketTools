@@ -1,35 +1,38 @@
 package com.shresht7.pockettools.ui.screens.ruler
 
+import android.util.DisplayMetrics
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import android.graphics.Paint
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.style.TextAlign
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RulerScreen(navController: NavController) {
+    /* The context is used to get the display metrics */
+    val context = LocalContext.current
+    val metrics: DisplayMetrics = context.resources.displayMetrics
+
+    /* Pixels per millimeter */
+    val pxPerMm = metrics.ydpi / 25.4f
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                title = { Text("Ruler") },
-            )
-        }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -37,7 +40,59 @@ fun RulerScreen(navController: NavController) {
                 .padding(padding),
             contentAlignment = Alignment.Center,
         ) {
-            Text("Ruler")
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                val tickColor = MaterialTheme.colorScheme.onBackground
+                Canvas(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    val cmMarkWidth = 75f
+                    val mmMarkWidth = 25f
+                    val rulerRight = size.width
+
+                    val paint = Paint().apply {
+                        color = tickColor.toArgb()
+                        textSize = 32f
+                        textAlign = Paint.Align.RIGHT
+                        isAntiAlias = true
+                    }
+
+                    for (mm in 0..2000) {
+                        val y = mm * pxPerMm
+                        when {
+                            // Centimeter Tick
+                            mm % 10 == 0 -> {
+                                drawLine(
+                                    color = tickColor,
+                                    start = Offset(rulerRight - cmMarkWidth, y),
+                                    end = Offset(rulerRight, y),
+                                    strokeWidth = 3f,
+                                    cap = StrokeCap.Round
+                                )
+
+                                drawContext.canvas.nativeCanvas.drawText(
+                                    "${mm / 10}",
+                                    rulerRight - cmMarkWidth - 20f,
+                                    y + paint.textSize / 3,
+                                    paint
+                                )
+                            }
+
+                            // Millimeter Tick
+                            else -> {
+                                drawLine(
+                                    color = tickColor.copy(alpha = 0.7f),
+                                    start = Offset(rulerRight - mmMarkWidth, y),
+                                    end = Offset(rulerRight, y),
+                                    strokeWidth = 2f,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
