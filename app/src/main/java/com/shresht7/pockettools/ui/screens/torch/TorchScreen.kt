@@ -7,14 +7,9 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,12 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
@@ -109,6 +105,9 @@ fun TorchButton(context: Context) {
     /* Whether the torch is currently turned on */
     var isTorchOn by remember { mutableStateOf(false) }
 
+    /* The torch brightness level */
+    var brightness by remember { mutableFloatStateOf(0.5f) } // 0 = dim, 1 = bright
+
     // Instantiate the Camera Manager and get the ID of the first camera with flash available
     val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
     val cameraId = remember {
@@ -143,49 +142,31 @@ fun TorchButton(context: Context) {
         }
     }
 
-    // Animation
-    val infiniteTransition = rememberInfiniteTransition(label = "glow")
-    val glowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.2f,
-        targetValue = 0.7f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "glowAlpha"
-    )
-    val glowScale by infiniteTransition.animateFloat(
-        initialValue = 1.05f,
-        targetValue = 1.1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "glowScale"
-    )
-
     Box(
         modifier = Modifier
-            .fillMaxSize().aspectRatio(1.0f),
+            .fillMaxSize()
+            .aspectRatio(1.0f)
+            .pointerInput(Unit) {
+                detectVerticalDragGestures { _, dragAmount ->
+                    brightness = (brightness - dragAmount / 1000f).coerceIn(0.0f, 1.0f)
+                }
+            },
         contentAlignment = Alignment.Center,
     ) {
-        // Fading Glow behind the button
-        if (isTorchOn) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(fraction = 0.5f)
-                    .scale(glowScale)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha),
-                        shape = CircleShape
-                    )
-            )
-        }
+        // Brightness Indicator Concentric Circles
+        BrightnessIndicator(
+            brightness,
+            innerRadiusFactor = 0.5f,
+            outerRadiusFactor = 0.9f,
+            steps = 5,
+            dotsPerCircle = 60,
+            modifier = Modifier.fillMaxSize(),
+        )
 
         // Main Button
         Box(
             modifier = Modifier
-                .fillMaxSize(fraction = 0.3f)
+                .fillMaxSize(fraction = 0.5f)
                 .background(
                     color = if (isTorchOn) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape,
