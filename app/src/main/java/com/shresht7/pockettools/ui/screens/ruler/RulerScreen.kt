@@ -41,12 +41,13 @@ fun RulerScreen(navController: NavController) {
                 .padding(padding),
             contentAlignment = Alignment.Center,
         ) {
-            Column(
+            Box(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                contentAlignment = Alignment.Center,
             ) {
                 val tickColor = MaterialTheme.colorScheme.onBackground
                 MetricRuler(screenHeightMm, pxPerMm, tickColor)
+                ImperialRuler(screenHeightMm, pxPerMm, tickColor)
             }
         }
     }
@@ -109,6 +110,75 @@ fun MetricRuler(screenHeightMm: Float, pxPerMm: Float, tickColor: Color) {
                         start = Offset(rulerRight - mmMarkWidth, y),
                         end = Offset(rulerRight, y),
                         strokeWidth = 2f,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ImperialRuler(screenHeightMm: Float, pxPerMm: Float, tickColor: Color) {
+    Canvas(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        val inchInMm = 25.4f
+        val pxPerInch = pxPerMm * inchInMm
+
+        val inchMarkWidth = 80f
+        val halfInchMarkWidth = 60f
+        val quarterInchMarkWidth = 40f
+
+        val paint = Paint().apply {
+            color = tickColor.toArgb()
+            textSize = 32f
+            textAlign = Paint.Align.RIGHT
+            isAntiAlias = true
+        }
+
+        val totalInches = (screenHeightMm / inchInMm).toInt() + 1
+
+        // Draw inch subdivisions (0.5 inch steps)
+        for (i in 0..(totalInches * 4)) {
+            val fraction = i / 4f
+            val y = fraction * pxPerInch
+            when {
+                // Whole Inch
+                i % 4 == 0 -> {
+                    drawLine(
+                        color = tickColor,
+                        start = Offset(0f, y),
+                        end = Offset(inchMarkWidth, y),
+                        strokeWidth = 3f,
+                        cap = StrokeCap.Round,
+                    )
+                    drawContext.canvas.nativeCanvas.drawText(
+                        "${fraction.toInt()}",
+                        inchMarkWidth + 40f,
+                        y + paint.textSize / 3,
+                        paint
+                    )
+                }
+
+                // Half Inch
+                i % 2 == 0 -> {
+                    drawLine(
+                        color = tickColor.copy(alpha = 0.75f),
+                        start = Offset(0f, y),
+                        end = Offset(halfInchMarkWidth, y),
+                        strokeWidth = 3f,
+                        cap = StrokeCap.Round,
+                    )
+                }
+
+                // Quarter Inch
+                else -> {
+                    drawLine(
+                        color = tickColor.copy(alpha = 0.5f),
+                        start = Offset(0f, y),
+                        end = Offset(quarterInchMarkWidth, y),
+                        strokeWidth = 2f,
+                        cap = StrokeCap.Round,
                     )
                 }
             }
