@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -45,65 +46,70 @@ fun RulerScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val tickColor = MaterialTheme.colorScheme.onBackground
-                Canvas(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    val cmMarkWidth = 75f
-                    val mmMarkWidth = 25f
-                    val rulerRight = size.width
+                MetricRuler(screenHeightMm, pxPerMm, tickColor)
+            }
+        }
+    }
+}
 
-                    val paint = Paint().apply {
-                        color = tickColor.toArgb()
-                        textSize = 32f
-                        textAlign = Paint.Align.RIGHT
-                        isAntiAlias = true
-                    }
+@Composable
+fun MetricRuler(screenHeightMm: Float, pxPerMm: Float, tickColor: Color) {
+    Canvas(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        val cmMarkWidth = 75f
+        val mmMarkWidth = 25f
+        val rulerRight = size.width
 
-                    val totalMm = screenHeightMm.toInt()
+        val paint = Paint().apply {
+            color = tickColor.toArgb()
+            textSize = 32f
+            textAlign = Paint.Align.RIGHT
+            isAntiAlias = true
+        }
 
-                    for (mm in 0..totalMm) {
-                        val y = mm * pxPerMm
-                        when {
-                            // Centimeter Tick
-                            mm % 10 == 0 -> {
-                                drawLine(
-                                    color = tickColor,
-                                    start = Offset(rulerRight - cmMarkWidth, y),
-                                    end = Offset(rulerRight, y),
-                                    strokeWidth = 3f,
-                                    cap = StrokeCap.Round
-                                )
+        val totalMm = screenHeightMm.toInt()
 
-                                drawContext.canvas.nativeCanvas.drawText(
-                                    "${mm / 10}",
-                                    rulerRight - cmMarkWidth - 20f,
-                                    y + paint.textSize / 3,
-                                    paint
-                                )
-                            }
+        for (mm in 0..totalMm) {
+            val y = mm * pxPerMm
+            when {
+                // Centimeter Tick
+                mm % 10 == 0 -> {
+                    drawLine(
+                        color = tickColor,
+                        start = Offset(rulerRight - cmMarkWidth, y),
+                        end = Offset(rulerRight, y),
+                        strokeWidth = 3f,
+                        cap = StrokeCap.Round
+                    )
 
-                            // Half Centimeter Ticks
-                            mm % 5 == 0 -> {
-                                drawLine(
-                                    color = tickColor.copy(alpha = 0.85f),
-                                    start = Offset(rulerRight - (cmMarkWidth / 2), y),
-                                    end = Offset(rulerRight, y),
-                                    strokeWidth = 3f,
-                                    cap = StrokeCap.Round
-                                )
-                            }
+                    drawContext.canvas.nativeCanvas.drawText(
+                        "${mm / 10}",
+                        rulerRight - cmMarkWidth - 20f,
+                        y + paint.textSize / 3,
+                        paint
+                    )
+                }
 
-                            // Millimeter Tick
-                            else -> {
-                                drawLine(
-                                    color = tickColor.copy(alpha = 0.7f),
-                                    start = Offset(rulerRight - mmMarkWidth, y),
-                                    end = Offset(rulerRight, y),
-                                    strokeWidth = 2f,
-                                )
-                            }
-                        }
-                    }
+                // Half Centimeter Ticks
+                mm % 5 == 0 -> {
+                    drawLine(
+                        color = tickColor.copy(alpha = 0.85f),
+                        start = Offset(rulerRight - (cmMarkWidth / 2), y),
+                        end = Offset(rulerRight, y),
+                        strokeWidth = 3f,
+                        cap = StrokeCap.Round
+                    )
+                }
+
+                // Millimeter Tick
+                else -> {
+                    drawLine(
+                        color = tickColor.copy(alpha = 0.7f),
+                        start = Offset(rulerRight - mmMarkWidth, y),
+                        end = Offset(rulerRight, y),
+                        strokeWidth = 2f,
+                    )
                 }
             }
         }
