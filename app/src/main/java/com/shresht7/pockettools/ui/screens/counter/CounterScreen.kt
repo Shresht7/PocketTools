@@ -3,21 +3,28 @@ package com.shresht7.pockettools.ui.screens.counter
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Loop
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +42,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -120,7 +130,7 @@ fun CounterScreen(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     Text(
                         text = "Tap to increase",
@@ -133,8 +143,43 @@ fun CounterScreen(navController: NavController) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Buttons
+                Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
+                    AppIconButton(Icons.Filled.Remove, onClick = { count-- }, contentDescription = "Decrease", backgroundColor = MaterialTheme.colorScheme.tertiary)
+                    AppIconButton(Icons.Filled.Loop, onClick = { count = 0 }, contentDescription = "Reset", backgroundColor = MaterialTheme.colorScheme.secondary)
+                    AppIconButton(Icons.Filled.Add, onClick = { count++ }, contentDescription = "Increase")
+                }
             }
         }
+    }
+}
+
+@Composable
+fun AppIconButton(
+    imageVector: ImageVector,
+    contentDescription: String? = null,
+    onClick: () -> Unit,
+    shape: Shape = CircleShape,
+    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    tint: Color = MaterialTheme.colorScheme.onPrimary,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .border(border = borderStroke)
+            .background(color = backgroundColor, shape = shape)
+    ) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            tint = tint,
+            modifier = modifier
+        )
     }
 }
 
