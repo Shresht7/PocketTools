@@ -1,12 +1,11 @@
 package com.shresht7.pockettools.ui.screens.ruler
 
+import android.graphics.Paint
 import android.util.DisplayMetrics
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,12 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import android.graphics.Paint
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 
 @Composable
 fun RulerScreen(navController: NavController) {
@@ -31,6 +27,10 @@ fun RulerScreen(navController: NavController) {
 
     /* Pixels per millimeter */
     val pxPerMm = metrics.ydpi / 25.4f
+
+    // Compute screen height in mm
+    val screenHeightPx = metrics.heightPixels.toFloat()
+    val screenHeightMm = screenHeightPx / pxPerMm
 
     Scaffold(
     ) { padding ->
@@ -59,7 +59,9 @@ fun RulerScreen(navController: NavController) {
                         isAntiAlias = true
                     }
 
-                    for (mm in 0..2000) {
+                    val totalMm = screenHeightMm.toInt()
+
+                    for (mm in 0..totalMm) {
                         val y = mm * pxPerMm
                         when {
                             // Centimeter Tick
