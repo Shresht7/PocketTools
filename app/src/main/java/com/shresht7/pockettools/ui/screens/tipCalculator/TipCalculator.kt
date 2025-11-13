@@ -1,5 +1,6 @@
 package com.shresht7.pockettools.ui.screens.tipCalculator
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -115,7 +116,8 @@ fun TipCalculator(navController: NavController) {
     }
 }
 
-private fun calculateTipAmount(amount: Float, tipFraction: Float, roundUp: Boolean): String {
+@VisibleForTesting
+internal fun calculateTipAmount(amount: Float, tipFraction: Float, roundUp: Boolean): String {
     var tip = amount * tipFraction
     if (roundUp) {
         tip = kotlin.math.ceil(tip)
@@ -123,7 +125,8 @@ private fun calculateTipAmount(amount: Float, tipFraction: Float, roundUp: Boole
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 
-private fun calculateTotalAmount(amount: Float, tipFraction: Float, roundUp: Boolean): String {
+@VisibleForTesting
+internal fun calculateTotalAmount(amount: Float, tipFraction: Float, roundUp: Boolean): String {
     var tip = amount * tipFraction
     if (roundUp) {
         tip = kotlin.math.ceil(tip)
