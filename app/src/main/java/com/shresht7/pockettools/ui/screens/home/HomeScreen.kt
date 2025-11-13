@@ -42,6 +42,9 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate(Screen.Ruler) }) {
                 Text("Ruler")
             }
+            Button(onClick = { navController.navigate(Screen.SensorsList) }) {
+                Text("SensorsList")
+            }
         }
     }
 }

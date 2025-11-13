@@ -8,6 +8,7 @@ import androidx.navigation.createGraph
 import com.shresht7.pockettools.ui.screens.counter.CounterScreen
 import com.shresht7.pockettools.ui.screens.home.HomeScreen
 import com.shresht7.pockettools.ui.screens.ruler.RulerScreen
+import com.shresht7.pockettools.ui.screens.sensors.SensorsListScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 import kotlinx.serialization.Serializable
@@ -24,6 +25,8 @@ sealed class Screen(val route: String) {
     data object Torch: Screen("torch")
     @Serializable
     data object Ruler: Screen("ruler")
+    @Serializable
+    data object SensorsList: Screen("sensorsList")
 }
 
 @Composable
@@ -34,6 +37,7 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.TipCalculator> { TipCalculatorScreen(navController) }
         composable<Screen.Torch> { TorchScreen(navController) }
         composable<Screen.Ruler> { RulerScreen(navController) }
+        composable<Screen.SensorsList> { SensorsListScreen(navController) }
     }
     NavHost(
         navController = navController,
