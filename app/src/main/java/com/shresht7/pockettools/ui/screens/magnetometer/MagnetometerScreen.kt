@@ -1,12 +1,9 @@
 package com.shresht7.pockettools.ui.screens.magnetometer
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,13 +21,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.shresht7.pockettools.ui.components.RadialIntensityIndicator
 import com.shresht7.pockettools.ui.components.WaveformGraph
-import com.shresht7.pockettools.ui.screens.torch.BrightnessIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,15 +77,14 @@ fun MagnetometerUI(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize(fraction = 0.8f),
         ) {
-            BrightnessIndicator(
-                brightness = ((state.magnitude - 25) * state.sensitivity) / 50,
+            RadialIntensityIndicator(
+                intensity = ((state.magnitude - 25) * state.sensitivity) / 50,
                 innerRadiusFactor = 0.33f,
                 outerRadiusFactor = 0.9f,
                 steps = 5,
                 color = Color.Yellow,
                 modifier = Modifier.fillMaxSize()
             )
-
             Text(
                 text = "${state.magnitude.toInt()} μT",
                 style = MaterialTheme.typography.headlineLarge,

@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.shresht7.pockettools.ui.components.RadialIntensityIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,8 +162,8 @@ fun TorchButton(context: Context) {
         contentAlignment = Alignment.Center,
     ) {
         // Brightness Indicator Concentric Circles
-        BrightnessIndicator(
-            brightness,
+        RadialIntensityIndicator(
+            intensity = brightness,
             innerRadiusFactor = 0.5f,
             outerRadiusFactor = 0.9f,
             steps = 5,
