@@ -161,7 +161,6 @@ fun AppIconButton(
     contentDescription: String? = null,
     onClick: () -> Unit,
     shape: Shape = CircleShape,
-    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     tint: Color = MaterialTheme.colorScheme.onPrimary,
     modifier: Modifier = Modifier
@@ -169,7 +168,6 @@ fun AppIconButton(
     IconButton(
         onClick = onClick,
         modifier = modifier
-            .border(border = borderStroke)
             .background(color = backgroundColor, shape = shape)
     ) {
         Icon(
