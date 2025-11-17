@@ -92,6 +92,6 @@ fun MagnetometerUI(
             )
         }
 
-        WaveformGraph(state.waveform)
+        WaveformGraph(state.waveform, modifier = Modifier.fillMaxSize())
     }
 }
