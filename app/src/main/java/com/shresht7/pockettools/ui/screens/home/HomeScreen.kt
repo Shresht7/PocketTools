@@ -39,7 +39,16 @@ fun HomeScreen(navController: NavController) {
     )
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Pocket Tools") }) }
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp, 48.dp, 24.dp, 24.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("Pocket Tools", fontSize = MaterialTheme.typography.titleLarge.fontSize)
+            }
+        }
     ) { padding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
