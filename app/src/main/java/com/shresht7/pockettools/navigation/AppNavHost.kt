@@ -12,25 +12,6 @@ import com.shresht7.pockettools.ui.screens.ruler.RulerScreen
 import com.shresht7.pockettools.ui.screens.sensors.SensorsListScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-sealed class Screen(val route: String) {
-    @Serializable
-    data object Home: Screen("home")
-    @Serializable
-    data object Counter: Screen("counter")
-    @Serializable
-    data object TipCalculator: Screen("tipCalculator")
-    @Serializable
-    data object Torch: Screen("torch")
-    @Serializable
-    data object Ruler: Screen("ruler")
-    @Serializable
-    data object SensorsList: Screen("sensorsList")
-    @Serializable
-    data object Magnetometer: Screen("Magnetometer")
-}
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
