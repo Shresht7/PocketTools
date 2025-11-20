@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -38,7 +37,7 @@ import androidx.compose.ui.unit.dp
 fun ToolCard(
     onClick: () -> Unit,
     imageVector: ImageVector? = null,
-    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant),
     shape: Shape = MaterialTheme.shapes.medium,
     content: @Composable () -> Unit,
 ) {
