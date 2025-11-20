@@ -3,13 +3,17 @@ package com.shresht7.pockettools.ui.screens.ruler
 import android.graphics.Paint
 import android.util.DisplayMetrics
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -50,6 +55,8 @@ fun RulerScreen(navController: NavController) {
 fun Rulers(pxPerMm: Float, tickColor: Color) {
     val density = LocalDensity.current
 
+    var touchY by remember { mutableStateOf<Float?>(null) }
+
     // Remember Paint objects so we don't allocate them every frame
     val labelPaint = remember(tickColor) {
         Paint().apply {
@@ -69,7 +76,16 @@ fun Rulers(pxPerMm: Float, tickColor: Color) {
         }
     }
 
-    Canvas(modifier = Modifier.fillMaxSize()) {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures { offset ->
+                    touchY = offset.y   // Capture touch Y position
+                }
+            }
+    ) {
+        // Dimensions
         val w = size.width
         val h = size.height
 
@@ -181,6 +197,40 @@ fun Rulers(pxPerMm: Float, tickColor: Color) {
                         strokeWidth = 1.4f,
                     )
                 }
+            }
+        }
+
+        // Measurement Mark
+        if (touchY != null) {
+            val snappedMm = (touchY!! / pxPerMm)
+            val snappedIn = (touchY!! / (pxPerMm * 25.4f))
+            val snappedY = snappedMm * pxPerMm
+            // Draw Red Line
+            drawLine(
+                color = Color.Red,
+                start = Offset(0f, snappedY),
+                end = Offset(size.width, snappedY),
+                strokeWidth = 2.dp.toPx()
+            )
+            // Inch Mark
+            val snappedInText = String.format("%.1f", snappedIn)
+            drawContext.canvas.nativeCanvas.apply {
+                drawText(
+                    snappedInText,
+                    128.dp.toPx(),
+                    snappedY - 16.dp.toPx(),
+                    labelPaint
+                )
+            }
+            // Centimeter Mark
+            val snappedCmText = String.format("%.1f", snappedMm / 10)
+            drawContext.canvas.nativeCanvas.apply {
+                drawText(
+                    snappedCmText,
+                    size.width - 128.dp.toPx(),
+                    snappedY - 16.dp.toPx(),
+                    labelPaint
+                )
             }
         }
     }
