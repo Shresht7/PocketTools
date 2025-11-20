@@ -3,7 +3,9 @@ package com.shresht7.pockettools.ui.screens.ruler
 import android.graphics.Paint
 import android.util.DisplayMetrics
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -80,9 +82,11 @@ fun Rulers(pxPerMm: Float, tickColor: Color) {
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    touchY = offset.y   // Capture touch Y position
-                }
+                detectDragGestures(
+                    onDragStart = { offset -> touchY = offset.y },
+                    onDrag = { change, _ -> touchY = change.position.y },
+                    onDragEnd = { /* Keep or Clear */ }
+                )
             }
     ) {
         // Dimensions
