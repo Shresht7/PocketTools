@@ -41,11 +41,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ToolCard(
+    title: String,
     onClick: () -> Unit,
     imageVector: ImageVector? = null,
     borderStroke: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     shape: Shape = MaterialTheme.shapes.medium,
-    content: @Composable () -> Unit,
+//    content: @Composable () -> Unit,
 ) {
     var cardWidth by remember { mutableFloatStateOf(0f) }
     var cardHeight by remember { mutableFloatStateOf(0f) }
@@ -117,7 +118,13 @@ fun ToolCard(
                 )
             }
 
-            content()
+            // Tool Card Title
+            Text(
+                text = title,
+                modifier = Modifier.padding(16.dp),
+                fontSize = MaterialTheme.typography.titleMedium.fontSize,
+            )
+
         }
     }
 }
@@ -125,11 +132,9 @@ fun ToolCard(
 @Preview(showBackground = true)
 @Composable
 fun ToolCardPreview() {
-    ToolCard(imageVector = Icons.Default.Sensors, onClick = {}) {
-        Text(
-            text = "Counter",
-            modifier = Modifier
-                .padding(16.dp),
-        )
-    }
+    ToolCard(
+        title = "Counter",
+        imageVector = Icons.Default.Sensors,
+        onClick = {}
+    )
 }

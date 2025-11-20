@@ -56,15 +56,10 @@ fun ToolBox(
                     }
             ) {
                 ToolCard(
+                    title = screen.title,
                     imageVector = screen.icon,
                     onClick = { navController.navigate(screen) }
-                ) {
-                    Text(
-                        text = screen.title,
-                        modifier = Modifier.padding(16.dp),
-                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                    )
-                }
+                )
             }
         }
     }
