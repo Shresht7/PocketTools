@@ -27,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -97,10 +98,11 @@ fun ToolCard(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(12.dp)
-                        .size((cardWidth * 0.6).dp)
+                        .size((cardWidth * 0.75).dp)
+                        .rotate(12f)
                         .offset(
-                            x = (cardWidth * 0.125f).dp,
-                            y = (cardHeight * 0.125f).dp,
+                            x = (cardWidth * 0.15f).dp,
+                            y = (cardHeight * 0.1f).dp,
                         )
                 )
             }
