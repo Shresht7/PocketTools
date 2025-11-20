@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -46,7 +47,7 @@ fun ToolCard(
     imageVector: ImageVector? = null,
     borderStroke: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     shape: Shape = MaterialTheme.shapes.medium,
-//    content: @Composable () -> Unit,
+    // content: @Composable () -> Unit,
 ) {
     var cardWidth by remember { mutableFloatStateOf(0f) }
     var cardHeight by remember { mutableFloatStateOf(0f) }
@@ -122,7 +123,7 @@ fun ToolCard(
             Text(
                 text = title,
                 modifier = Modifier.padding(16.dp),
-                fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                style = MaterialTheme.typography.titleMedium,
             )
 
         }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,7 +58,10 @@ fun HomeScreen(navController: NavController) {
                     .padding(24.dp, 64.dp, 24.dp, 24.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("Pocket Tools", fontSize = MaterialTheme.typography.titleLarge.fontSize)
+                Text(
+                    text = "Pocket Tools",
+                    style = MaterialTheme.typography.titleLarge,
+                )
             }
         }
     ) { padding ->

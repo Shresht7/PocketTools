@@ -4,12 +4,14 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -52,7 +54,17 @@ fun PocketToolsTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography(
+            bodySmall = Typography().bodySmall.copy(fontFamily = FontFamily.Monospace),
+            bodyMedium = Typography().bodyMedium.copy(fontFamily = FontFamily.Monospace),
+            bodyLarge = Typography().bodyLarge.copy(fontFamily = FontFamily.Monospace),
+            displaySmall = Typography().displaySmall.copy(fontFamily = FontFamily.Monospace),
+            displayMedium = Typography().displayMedium.copy(fontFamily = FontFamily.Monospace),
+            displayLarge = Typography().displayLarge.copy(fontFamily = FontFamily.Monospace),
+            titleSmall = Typography().titleSmall.copy(fontFamily = FontFamily.Monospace),
+            titleMedium = Typography().titleMedium.copy(fontFamily = FontFamily.Monospace),
+            titleLarge = Typography().titleLarge.copy(fontFamily = FontFamily.Monospace),
+        ),
         content = content
     )
 }
