@@ -4,12 +4,12 @@ import android.graphics.Paint
 import android.util.DisplayMetrics
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -18,7 +18,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlin.math.roundToInt
 
 @Composable
 fun RulerScreen(navController: NavController) {
@@ -29,10 +32,6 @@ fun RulerScreen(navController: NavController) {
     /* Pixels per millimeter */
     val pxPerMm = metrics.ydpi / 25.4f
 
-    // Compute screen height in mm
-    val screenHeightPx = metrics.heightPixels.toFloat()
-    val screenHeightMm = screenHeightPx / pxPerMm
-
     Scaffold(
     ) { padding ->
         Box(
@@ -41,144 +40,145 @@ fun RulerScreen(navController: NavController) {
                 .padding(padding),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                val tickColor = MaterialTheme.colorScheme.onBackground
-                MetricRuler(screenHeightMm, pxPerMm, tickColor)
-                ImperialRuler(screenHeightMm, pxPerMm, tickColor)
-            }
+            val tickColor = MaterialTheme.colorScheme.onBackground
+            Rulers(pxPerMm, tickColor)
         }
     }
 }
 
 @Composable
-fun MetricRuler(screenHeightMm: Float, pxPerMm: Float, tickColor: Color) {
-    Canvas(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        val cmMarkWidth = 75f
-        val mmMarkWidth = 25f
-        val rulerRight = size.width
+fun Rulers(pxPerMm: Float, tickColor: Color) {
+    val density = LocalDensity.current
 
-        val paint = Paint().apply {
+    // Remember Paint objects so we don't allocate them every frame
+    val labelPaint = remember(tickColor) {
+        Paint().apply {
             color = tickColor.toArgb()
-            textSize = 32f
+            textSize = with(density) { 14.dp.toPx() * 1.6f }
             textAlign = Paint.Align.RIGHT
             isAntiAlias = true
         }
+    }
 
-        val totalMm = screenHeightMm.toInt()
+    val labelPaintLeft = remember(tickColor) {
+        Paint().apply {
+            color = tickColor.toArgb()
+            textSize = labelPaint.textSize
+            textAlign = Paint.Align.LEFT
+            isAntiAlias = true
+        }
+    }
 
-        for (mm in 0..totalMm) {
-            val y = mm * pxPerMm
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val w = size.width
+        val h = size.height
+
+        // Padding from edge, if required
+//        val horizontalPadding = 24f.dp.toPx()
+//        val verticalPadding = 24f.dp.toPx()
+        val horizontalPadding = 0f
+        val verticalPadding = 0f
+
+        // X Positions for left (imperial) and right (metric) rulers
+        val leftX = horizontalPadding
+        val rightX = w - horizontalPadding
+
+        // Tick lengths (px)
+        val majorTick = 0.11f * w
+        val halfMajorTick = 0.075f * w
+        val minorTick = 0.04f * w
+
+        // Metric
+        val totalMmVisible = ((h - verticalPadding * 2) / pxPerMm).roundToInt()
+        for (mm in 0..totalMmVisible) {
+            val y = verticalPadding + mm * pxPerMm
             when {
                 // Centimeter Tick
                 mm % 10 == 0 -> {
+                    // Tick Mark
                     drawLine(
                         color = tickColor,
-                        start = Offset(rulerRight - cmMarkWidth, y),
-                        end = Offset(rulerRight, y),
+                        start = Offset(rightX - majorTick, y),
+                        end = Offset(rightX, y),
                         strokeWidth = 3f,
                         cap = StrokeCap.Round
                     )
-
+                    // Label
+                    val label = "${mm / 10}"
                     drawContext.canvas.nativeCanvas.drawText(
-                        "${mm / 10}",
-                        rulerRight - cmMarkWidth - 20f,
-                        y + paint.textSize / 3,
-                        paint
+                        label,
+                        rightX - majorTick - 12f.dp.toPx(),
+                        y + labelPaint.textSize / 3,
+                        labelPaint
                     )
                 }
-
-                // Half Centimeter Ticks
+                // Half-Centimeter Tick
                 mm % 5 == 0 -> {
                     drawLine(
                         color = tickColor.copy(alpha = 0.85f),
-                        start = Offset(rulerRight - (cmMarkWidth / 2), y),
-                        end = Offset(rulerRight, y),
-                        strokeWidth = 3f,
-                        cap = StrokeCap.Round
+                        start = Offset(rightX - halfMajorTick, y),
+                        end = Offset(rightX, y),
+                        strokeWidth = 2.5f,
+                        cap = StrokeCap.Round,
                     )
                 }
-
-                // Millimeter Tick
+                // Millimeter Ticks
                 else -> {
                     drawLine(
                         color = tickColor.copy(alpha = 0.7f),
-                        start = Offset(rulerRight - mmMarkWidth, y),
-                        end = Offset(rulerRight, y),
-                        strokeWidth = 2f,
+                        start = Offset(rightX - minorTick, y),
+                        end = Offset(rightX, y),
+                        strokeWidth = 1.4f,
                     )
                 }
             }
         }
-    }
-}
 
-@Composable
-fun ImperialRuler(screenHeightMm: Float, pxPerMm: Float, tickColor: Color) {
-    Canvas(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        val inchInMm = 25.4f
-        val pxPerInch = pxPerMm * inchInMm
-
-        val inchMarkWidth = 80f
-        val halfInchMarkWidth = 60f
-        val quarterInchMarkWidth = 40f
-
-        val paint = Paint().apply {
-            color = tickColor.toArgb()
-            textSize = 32f
-            textAlign = Paint.Align.RIGHT
-            isAntiAlias = true
-        }
-
-        val totalInches = (screenHeightMm / inchInMm).toInt() + 1
-
-        // Draw inch subdivisions (0.5 inch steps)
-        for (i in 0..(totalInches * 4)) {
+        // Imperial
+        val inchMm = 25.4f
+        val pxPerInch = pxPerMm * inchMm
+        val totalInchesVisible = ((h - verticalPadding * 2) / pxPerInch).roundToInt()
+        for (i in 0..(totalInchesVisible * 4)) {
+            // i indexes quarter-inch steps: i % 4 == 0 => whole inch
             val fraction = i / 4f
-            val y = fraction * pxPerInch
+            val y = verticalPadding + fraction * pxPerInch
             when {
-                // Whole Inch
+                // 1 Inch
                 i % 4 == 0 -> {
+                    // Tick Mark
                     drawLine(
                         color = tickColor,
-                        start = Offset(0f, y),
-                        end = Offset(inchMarkWidth, y),
+                        start = Offset(leftX, y),
+                        end = Offset(leftX + majorTick, y),
                         strokeWidth = 3f,
-                        cap = StrokeCap.Round,
+                        cap = StrokeCap.Round
                     )
+                    // Label
+                    val label = "${i / 4}"
                     drawContext.canvas.nativeCanvas.drawText(
-                        "${fraction.toInt()}",
-                        inchMarkWidth + 40f,
-                        y + paint.textSize / 3,
-                        paint
+                        label,
+                        leftX + majorTick + 12f.dp.toPx(),
+                        y + labelPaintLeft.textSize / 3,
+                        labelPaintLeft
                     )
                 }
-
-                // Half Inch
+                // Half-Inch
                 i % 2 == 0 -> {
                     drawLine(
-                        color = tickColor.copy(alpha = 0.75f),
-                        start = Offset(0f, y),
-                        end = Offset(halfInchMarkWidth, y),
-                        strokeWidth = 3f,
+                        color = tickColor.copy(alpha = 0.85f),
+                        start = Offset(leftX, y),
+                        end = Offset(leftX + halfMajorTick, y),
+                        strokeWidth = 2.5f,
                         cap = StrokeCap.Round,
                     )
                 }
-
-                // Quarter Inch
+                // Quarter-Inch Minor
                 else -> {
                     drawLine(
-                        color = tickColor.copy(alpha = 0.5f),
-                        start = Offset(0f, y),
-                        end = Offset(quarterInchMarkWidth, y),
-                        strokeWidth = 2f,
-                        cap = StrokeCap.Round,
+                        color = tickColor.copy(alpha = 0.65f),
+                        start = Offset(leftX, y),
+                        end = Offset(leftX + minorTick, y),
+                        strokeWidth = 1.4f,
                     )
                 }
             }
