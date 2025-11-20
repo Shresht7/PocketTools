@@ -10,6 +10,7 @@ import com.shresht7.pockettools.ui.screens.home.HomeScreen
 import com.shresht7.pockettools.ui.screens.magnetometer.MagnetometerScreen
 import com.shresht7.pockettools.ui.screens.ruler.RulerScreen
 import com.shresht7.pockettools.ui.screens.sensors.SensorsListScreen
+import com.shresht7.pockettools.ui.screens.spiritLevel.SpiritLevelScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 
@@ -23,6 +24,7 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.Ruler> { RulerScreen(navController) }
         composable<Screen.SensorsList> { SensorsListScreen(navController) }
         composable<Screen.Magnetometer> { MagnetometerScreen(navController) }
+        composable<Screen.SpiritLevel> { SpiritLevelScreen(navController) }
     }
     NavHost(
         navController = navController,

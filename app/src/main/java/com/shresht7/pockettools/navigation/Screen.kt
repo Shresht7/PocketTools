@@ -3,6 +3,7 @@ package com.shresht7.pockettools.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Balance
 import androidx.compose.material.icons.outlined.CompassCalibration
 import androidx.compose.material.icons.outlined.FlashlightOn
 import androidx.compose.material.icons.outlined.Numbers
@@ -28,6 +29,8 @@ sealed class Screen(val route: String, val title: String) {
     data object SensorsList: Screen("sensorsList", "Sensors List")
     @Serializable
     data object Magnetometer: Screen("magnetometer", "Magnetometer")
+    @Serializable
+    data object SpiritLevel: Screen("spirit-level", "Spirit Level")
 
     val Screen.icon: ImageVector
         get() = when (this) {
@@ -38,6 +41,7 @@ sealed class Screen(val route: String, val title: String) {
             SensorsList -> Icons.Outlined.Sensors
             TipCalculator -> Icons.Outlined.Payment
             Torch -> Icons.Outlined.FlashlightOn
+            SpiritLevel -> Icons.Outlined.Balance
         }
 }
 
