@@ -79,10 +79,6 @@ fun SpiritLevelScreen(navController: NavController) {
     }
 }
 
-fun mapTiltToOffset(angle: Float, maxOffset: Float): Float {
-    return (angle / 45f).coerceIn(-1f, 1f) * maxOffset
-}
-
 @Composable
 fun HorizontalSpiritLevel(orientation: Orientation, modifier: Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
