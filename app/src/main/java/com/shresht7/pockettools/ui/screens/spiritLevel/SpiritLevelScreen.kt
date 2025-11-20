@@ -2,6 +2,7 @@ package com.shresht7.pockettools.ui.screens.spiritLevel
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
@@ -44,8 +46,11 @@ fun SpiritLevelScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .padding(padding)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             SpiritLevel(orientation)
+            Readouts(orientation, modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }
@@ -93,6 +98,20 @@ fun SpiritLevel(orientation: Orientation) {
             color = primaryColor,
             radius = bubbleRadius,
             center = Offset(bubbleX, bubbleY)
+        )
+    }
+}
+
+@Composable
+fun Readouts(orientation: Orientation, modifier: Modifier) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+        Text(
+            text = "Roll (x): ${"%.1f".format(orientation.roll)}°",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            text = "Pitch (y): ${"%.1f".format(orientation.pitch)}°",
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }
