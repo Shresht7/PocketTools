@@ -8,32 +8,38 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.shresht7.pockettools.data.Orientation
 
 @Composable
-fun VerticalSpiritLevel(orientation: Orientation, modifier: Modifier) {
-    val primaryColor = MaterialTheme.colorScheme.primary
+fun VerticalSpiritLevel(
+    pitch: Float,
+    bubbleColor: Color = MaterialTheme.colorScheme.primary,
+    bubbleRadius: Dp = 14.dp,
+    scaleColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    cornerRadius: CornerRadius = CornerRadius(50f, 50f),
+    modifier: Modifier
+) {
     Canvas(modifier) {
-        val barHeight = size.height * 0.9f
-        val barWidth = 20.dp.toPx()
+        val barHeight = size.height
+        val barWidth = size.width
 
         val centerX = size.width / 2
         val centerY = size.height / 2
 
         val maxOffset = barHeight * 0.45f
-        val bubbleY = centerY + mapTiltToOffset(-orientation.pitch, maxOffset)
-        val bubbleRadius = 14.dp.toPx()
+        val bubbleY = centerY + mapTiltToOffset(-pitch, maxOffset)
+        val bubbleRadius = bubbleRadius.toPx()
 
         drawRoundRect(
-            color = Color(0xFF444444),
+            color = scaleColor,
             topLeft = Offset(centerX - barWidth / 2, centerY - barHeight / 2),
             size = Size(barWidth, barHeight),
-            cornerRadius = CornerRadius(50f, 50f)
+            cornerRadius = cornerRadius
         )
 
         drawCircle(
-            color = primaryColor,
+            color = bubbleColor,
             radius = bubbleRadius,
             center = Offset(centerX, bubbleY)
         )

@@ -55,10 +55,10 @@ fun SpiritLevelScreen(navController: NavController) {
             )
 
             VerticalSpiritLevel(
-                orientation,
+                orientation.pitch,
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(60.dp)
+                    .width(28.dp)
                     .align(Alignment.CenterEnd)
             )
 
