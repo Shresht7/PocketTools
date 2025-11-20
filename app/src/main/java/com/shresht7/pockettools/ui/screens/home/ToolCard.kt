@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,11 +17,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ToolCard(
     onClick: () -> Unit,
-    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimaryContainer),
+    borderStroke: BorderStroke = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
     shape: Shape = MaterialTheme.shapes.medium,
     content: @Composable () -> Unit,
 ) {
-    Card(
+    OutlinedCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
