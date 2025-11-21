@@ -14,6 +14,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.shresht7.pockettools.data.Orientation
 
+/**
+ * A composable that displays a radial (bull's eye) spirit level.
+ *
+ * @param orientation Contains the pitch and roll data.
+ * @param primaryColor The primary color used for accents.
+ * @param crosshairColor The color of the central crosshair.
+ * @param bubbleRadiusDp The radius of the main bubble.
+ * @param bubbleColor The color of the main bubble.
+ * @param borderCircleColor The color of the outer border circle.
+ * @param borderCircleStrokeWidthDp The stroke width of the outer border.
+ */
 @Composable
 fun SpiritLevel(
     orientation: Orientation,
