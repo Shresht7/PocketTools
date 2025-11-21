@@ -43,9 +43,11 @@ class MagnetometerViewModel(
 
         // Update the state
         val currentState = _state.value
+        val intensity = ((smoothed - 25) * currentState.sensitivity) / 50
         _state.value = currentState.copy(
             magnitude = smoothed,
-            waveform = (currentState.waveform + smoothed).takeLast(150) // For graph
+            waveform = (currentState.waveform + smoothed).takeLast(150), // For graph
+            intensity = intensity
         )
     }
 

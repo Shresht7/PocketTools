@@ -78,7 +78,7 @@ fun MagnetometerUI(
             modifier = Modifier.fillMaxSize(fraction = 0.8f),
         ) {
             RadialIntensityIndicator(
-                intensity = ((state.magnitude - 25) * state.sensitivity) / 50,
+                intensity = state.intensity,
                 innerRadiusFactor = 0.33f,
                 outerRadiusFactor = 0.9f,
                 steps = 5,
