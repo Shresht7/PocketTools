@@ -1,5 +1,8 @@
 package com.shresht7.pockettools.ui.screens.plumbBob
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,6 +32,14 @@ import com.shresht7.pockettools.data.rememberUprightTilt
 @Composable
 fun PlumbBobScreen(navController: NavController) {
     val tilt = rememberUprightTilt()
+    val animatedTilt by animateFloatAsState(
+        targetValue = tilt,
+        label = "PlumbBobAngleAnimation",
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = 50f,
+        )
+    )
 
     Scaffold(
         topBar = {
@@ -47,7 +59,7 @@ fun PlumbBobScreen(navController: NavController) {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            PlumbBobUI(angle = tilt)
+            PlumbBobUI(angle = animatedTilt)
         }
     }
 }
