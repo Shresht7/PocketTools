@@ -47,7 +47,7 @@ fun SpiritLevelScreen(navController: NavController) {
         ) {
 
             HorizontalSpiritLevel(
-                orientation,
+                orientation.roll,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
