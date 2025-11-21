@@ -33,7 +33,7 @@ fun SpiritLevel(
     crosshairStrokeDp: Dp = 2.dp,
     bubbleRadiusDp: Dp = 25.dp,
     bubbleColor: Color = MaterialTheme.colorScheme.onSurface,
-    borderCircleColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    borderCircleColor: Color = MaterialTheme.colorScheme.primary,
     borderCircleStrokeWidthDp: Dp = 4.dp,
 ) {
     Canvas(
@@ -48,9 +48,11 @@ fun SpiritLevel(
         val bubbleX = size.center.x + mapTiltToOffset(orientation.roll, maxOffset)
         val bubbleY = size.center.y + mapTiltToOffset(orientation.pitch, maxOffset)
 
+        val isLevel = orientation.roll in -2f..2f && orientation.pitch in -2f..2f
+
         // Background Circle
         drawCircle(
-            color = borderCircleColor,
+            color = borderCircleColor.copy(alpha = if (isLevel) 0.7f else 0.3f),
             radius = maxOffset * 1.2f,
             center = size.center,
             style = Stroke(width = borderCircleStrokeWidthDp.toPx())
@@ -82,7 +84,7 @@ fun SpiritLevel(
 
         // Bubble
         drawCircle(
-            color = primaryColor.copy(alpha = 0.3f),
+            color = primaryColor.copy(alpha = if (isLevel) 0.5f else 0.3f),
             radius = maxOffset,
             center = Offset(bubbleX, bubbleY)
         )
