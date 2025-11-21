@@ -86,7 +86,7 @@ fun PlumbBobUI(
             val topCenter = Offset(size.width / 2f, size.height * 0.1f)
 
             // Bob Position
-            val bobY = size.height * 0.5f
+            val bobY = size.height * 0.75f
             val bobCenter = Offset(size.width / 2f, bobY)
 
             // Draw String
@@ -110,7 +110,7 @@ fun PlumbBobUI(
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 48.dp),
+                .padding(top = 36.dp),
             fontSize = MaterialTheme.typography.headlineMedium.fontSize,
         )
     }
