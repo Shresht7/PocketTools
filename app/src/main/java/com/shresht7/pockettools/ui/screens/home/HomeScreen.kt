@@ -36,6 +36,7 @@ fun HomeScreen(navController: NavController) {
         Screen.Torch,
         Screen.Magnetometer,
         Screen.SpiritLevel,
+        Screen.PlumbBob,
         Screen.Counter,
         Screen.TipCalculator,
         Screen.SensorsList,

@@ -8,6 +8,7 @@ import androidx.navigation.createGraph
 import com.shresht7.pockettools.ui.screens.counter.CounterScreen
 import com.shresht7.pockettools.ui.screens.home.HomeScreen
 import com.shresht7.pockettools.ui.screens.magnetometer.MagnetometerScreen
+import com.shresht7.pockettools.ui.screens.plumbBob.PlumbBobScreen
 import com.shresht7.pockettools.ui.screens.ruler.RulerScreen
 import com.shresht7.pockettools.ui.screens.sensors.SensorsListScreen
 import com.shresht7.pockettools.ui.screens.spiritLevel.SpiritLevelScreen
@@ -22,9 +23,10 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.TipCalculator> { TipCalculatorScreen(navController) }
         composable<Screen.Torch> { TorchScreen(navController) }
         composable<Screen.Ruler> { RulerScreen(navController) }
-        composable<Screen.SensorsList> { SensorsListScreen(navController) }
         composable<Screen.Magnetometer> { MagnetometerScreen(navController) }
         composable<Screen.SpiritLevel> { SpiritLevelScreen(navController) }
+        composable<Screen.PlumbBob> { PlumbBobScreen(navController) }
+        composable<Screen.SensorsList> { SensorsListScreen(navController) }
     }
     NavHost(
         navController = navController,

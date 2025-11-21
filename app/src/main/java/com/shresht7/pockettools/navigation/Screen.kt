@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Balance
+import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.CompassCalibration
 import androidx.compose.material.icons.outlined.FlashlightOn
 import androidx.compose.material.icons.outlined.Numbers
@@ -31,6 +32,8 @@ sealed class Screen(val route: String, val title: String) {
     data object Magnetometer: Screen("magnetometer", "Magnetometer")
     @Serializable
     data object SpiritLevel: Screen("spirit-level", "Spirit Level")
+    @Serializable
+    data object PlumbBob: Screen("plumb-bob", "Plumb Bob")
 
     val Screen.icon: ImageVector
         get() = when (this) {
@@ -42,6 +45,7 @@ sealed class Screen(val route: String, val title: String) {
             TipCalculator -> Icons.Outlined.Payment
             Torch -> Icons.Outlined.FlashlightOn
             SpiritLevel -> Icons.Outlined.Balance
+            PlumbBob -> Icons.Outlined.Circle
         }
 }
 
