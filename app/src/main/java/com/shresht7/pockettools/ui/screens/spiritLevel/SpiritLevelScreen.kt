@@ -50,7 +50,7 @@ fun SpiritLevelScreen(navController: NavController) {
                 orientation.roll,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(28.dp)
                     .align(Alignment.TopCenter)
             )
 
