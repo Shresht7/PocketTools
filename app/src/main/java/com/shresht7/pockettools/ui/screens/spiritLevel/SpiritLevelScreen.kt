@@ -43,13 +43,13 @@ fun SpiritLevelScreen(navController: NavController) {
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(8.dp, 8.dp, 8.dp, 16.dp)
         ) {
 
             HorizontalSpiritLevel(
                 orientation.roll,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.8f)
                     .height(28.dp)
                     .align(Alignment.TopCenter)
             )
@@ -57,7 +57,7 @@ fun SpiritLevelScreen(navController: NavController) {
             VerticalSpiritLevel(
                 orientation.pitch,
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .fillMaxHeight(0.8f)
                     .width(28.dp)
                     .align(Alignment.CenterEnd)
             )
