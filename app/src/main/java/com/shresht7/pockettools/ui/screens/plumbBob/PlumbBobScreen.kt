@@ -24,13 +24,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.shresht7.pockettools.sensor.rememberUprightTilt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlumbBobScreen(navController: NavController) {
+fun PlumbBobScreen(onNavigateUp: () -> Unit = {}) {
     val tilt = rememberUprightTilt()
     val animatedTilt by animateFloatAsState(
         targetValue = tilt,
@@ -45,7 +45,7 @@ fun PlumbBobScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -114,4 +114,10 @@ fun PlumbBobUI(
             fontSize = MaterialTheme.typography.headlineMedium.fontSize,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PlumbBobScreenPreview() {
+    PlumbBobScreen()
 }

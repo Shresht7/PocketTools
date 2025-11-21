@@ -32,17 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import java.text.NumberFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TipCalculatorScreen(navController: NavController) {
+fun TipCalculatorScreen(onNavigateUp: () -> Unit = {}) {
     var amount by remember { mutableFloatStateOf(100.0f) }
     var tipFraction by remember { mutableFloatStateOf(0.15f) }
     var roundUp by remember { mutableStateOf(false) }
@@ -55,7 +53,7 @@ fun TipCalculatorScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -137,5 +135,5 @@ internal fun calculateTotalAmount(amount: Float, tipFraction: Float, roundUp: Bo
 @Preview(showBackground = true)
 @Composable
 fun TipCalculatorScreenPreview() {
-    TipCalculatorScreen(navController = NavController(LocalContext.current))
+    TipCalculatorScreen()
 }

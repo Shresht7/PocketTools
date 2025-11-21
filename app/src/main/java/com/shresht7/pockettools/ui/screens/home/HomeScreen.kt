@@ -28,7 +28,7 @@ import com.shresht7.pockettools.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(onNavigateToTool: (Screen) -> Unit = {}) {
 
     /* The list of tools (in order) to show on the home-page */
     val screens = listOf(
@@ -79,7 +79,7 @@ fun HomeScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ToolBox(filtered, screens, navController, started)
+            ToolBox(filtered, screens, onNavigateToTool, started)
         }
     }
 }
@@ -87,5 +87,5 @@ fun HomeScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navController = NavController(LocalContext.current))
+    HomeScreen()
 }

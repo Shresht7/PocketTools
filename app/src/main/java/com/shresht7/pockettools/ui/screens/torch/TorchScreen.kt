@@ -38,12 +38,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
 import com.shresht7.pockettools.ui.components.RadialIntensityIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TorchScreen(navController: NavController) {
+fun TorchScreen(onNavigateUp: () -> Unit = {}) {
     /* The context is used to check and request camera permission */
     val context = LocalContext.current
 
@@ -75,7 +74,7 @@ fun TorchScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -194,5 +193,5 @@ fun TorchButton(context: Context) {
 @Preview(showBackground = true)
 @Composable
 fun TorchScreenPreview() {
-    TorchScreen(navController = NavController(LocalContext.current))
+    TorchScreen()
 }
