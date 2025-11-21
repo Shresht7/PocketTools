@@ -8,17 +8,21 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun VerticalSpiritLevel(
     pitch: Float,
+    modifier: Modifier,
     bubbleColor: Color = MaterialTheme.colorScheme.primary,
     bubbleRadius: Dp = 14.dp,
+    bubbleBorderWidth: Dp = 2.dp,
+    bubbleBorderColor: Color? = null,
     scaleColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     cornerRadius: CornerRadius = CornerRadius(50f, 50f),
-    modifier: Modifier
+    bubbleTravelRange: Float = 0.5f,
 ) {
     Canvas(modifier) {
         val barHeight = size.height
@@ -27,9 +31,10 @@ fun VerticalSpiritLevel(
         val centerX = size.width / 2
         val centerY = size.height / 2
 
-        val maxOffset = barHeight * 0.45f
+        val maxOffset = barHeight * bubbleTravelRange
         val bubbleY = centerY + mapTiltToOffset(-pitch, maxOffset)
-        val bubbleRadius = bubbleRadius.toPx()
+        val bubbleRadiusPx = bubbleRadius.toPx()
+        val bubbleBorderWidthPx = bubbleBorderWidth.toPx()
 
         drawRoundRect(
             color = scaleColor,
@@ -40,8 +45,17 @@ fun VerticalSpiritLevel(
 
         drawCircle(
             color = bubbleColor,
-            radius = bubbleRadius,
+            radius = bubbleRadiusPx,
             center = Offset(centerX, bubbleY)
         )
+
+        if (bubbleBorderWidth > 0.dp) {
+            drawCircle(
+                color = bubbleBorderColor ?: bubbleColor,
+                radius = bubbleRadiusPx,
+                center = Offset(centerX, bubbleY),
+                style = Stroke(width = bubbleBorderWidthPx)
+            )
+        }
     }
 }
