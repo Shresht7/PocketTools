@@ -64,7 +64,12 @@ fun SpiritLevelScreen(navController: NavController) {
 
             SpiritLevel(orientation)
 
-            Readouts(orientation, modifier = Modifier.align(Alignment.BottomCenter))
+            Readouts(
+                orientation,
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
