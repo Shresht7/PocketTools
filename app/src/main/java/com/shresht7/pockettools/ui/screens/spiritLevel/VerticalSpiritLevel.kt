@@ -8,9 +8,22 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * A composable that displays a vertical spirit level.
+ *
+ * @param pitch The pitch angle in degrees. The bubble moves based on this value.
+ * @param modifier The modifier to be applied to the canvas.
+ * @param bubbleColor The color of the bubble.
+ * @param bubbleRadius The radius of the bubble.
+ * @param scaleColor The color of the vial (the background bar).
+ * @param cornerRadius The corner radius for the vial.
+ * @param bubbleTravelRange A factor determining how far the bubble can travel from the center. 0.5 means it can travel up to 50% of the bar's height in either direction.
+ */
 @Composable
 fun VerticalSpiritLevel(
     pitch: Float,
@@ -29,6 +42,7 @@ fun VerticalSpiritLevel(
         val centerY = size.height / 2
 
         val maxOffset = barHeight * bubbleTravelRange
+        // Note: We use -pitch to ensure the bubble moves in the correct direction visually.
         val bubbleY = centerY + mapTiltToOffset(-pitch, maxOffset)
         val bubbleRadiusPx = bubbleRadius.toPx()
 
@@ -45,6 +59,28 @@ fun VerticalSpiritLevel(
             color = bubbleColor,
             radius = bubbleRadiusPx,
             center = Offset(centerX, bubbleY)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VerticalSpiritLevelPreview() {
+    MaterialTheme {
+        VerticalSpiritLevel(
+            pitch = -10f, // Example pitch angle
+            modifier = Modifier
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(
+                        constraints.copy(
+                            minWidth = 50.dp.toPx().toInt(),
+                            minHeight = 300.dp.toPx().toInt()
+                        )
+                    )
+                    layout(placeable.width, placeable.height) {
+                        placeable.placeRelative(0, 0)
+                    }
+                }
         )
     }
 }
