@@ -1,4 +1,4 @@
-package com.shresht7.pockettools.data
+package com.shresht7.pockettools.sensor
 
 import android.content.Context
 import android.hardware.Sensor

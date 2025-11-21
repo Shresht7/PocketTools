@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.shresht7.pockettools.data.Orientation
+import com.shresht7.pockettools.sensor.Orientation
 
 @Composable
 fun Readouts(orientation: Orientation, modifier: Modifier) {

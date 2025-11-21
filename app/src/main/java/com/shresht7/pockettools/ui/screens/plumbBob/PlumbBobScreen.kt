@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.shresht7.pockettools.data.rememberUprightTilt
+import com.shresht7.pockettools.sensor.rememberUprightTilt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

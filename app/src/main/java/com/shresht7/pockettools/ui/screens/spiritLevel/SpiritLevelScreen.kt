@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.shresht7.pockettools.data.rememberOrientation
+import com.shresht7.pockettools.sensor.rememberOrientation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
