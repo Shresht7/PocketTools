@@ -20,7 +20,9 @@ fun SpiritLevel(
     primaryColor: Color = MaterialTheme.colorScheme.primary,
     crosshairColor: Color = MaterialTheme.colorScheme.onSurface,
     crosshairStrokeDp: Dp = 2.dp,
-    bubbleRadiusDp: Dp = 40.dp,
+    bubbleRadiusDp: Dp = 25.dp,
+    borderCircleColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+    borderCircleStrokeWidthDp: Dp = 4.dp,
 ) {
     Canvas(
         modifier = Modifier
@@ -40,21 +42,21 @@ fun SpiritLevel(
 
         // Background Circle
         drawCircle(
-            color = Color(0xFF333333),
+            color = borderCircleColor,
             radius = maxOffset * 1.2f,
             center = size.center,
-            style = Stroke(width = 8.dp.toPx())
+            style = Stroke(width = borderCircleStrokeWidthDp.toPx())
         )
 
         // Center Crosshair
         drawCircle(
             color = crosshairColor.copy(alpha = 0.15f),
-            radius = bubbleRadius,
+            radius = bubbleRadius * 1.5f,
             center = size.center,
         )
         drawCircle(
             color = crosshairColor.copy(alpha = 0.3f),
-            radius = bubbleRadius * 0.7f,
+            radius = bubbleRadius,
             center = size.center,
         )
         drawLine(
