@@ -25,11 +25,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import kotlin.math.roundToInt
 
 @Composable
-fun RulerScreen(navController: NavController) {
+fun RulerScreen() {
     /* The context is used to get the display metrics */
     val context = LocalContext.current
     val metrics: DisplayMetrics = context.resources.displayMetrics

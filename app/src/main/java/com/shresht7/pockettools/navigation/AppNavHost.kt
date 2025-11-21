@@ -18,15 +18,15 @@ import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 @Composable
 fun AppNavHost(navController: NavHostController) {
     val graph = navController.createGraph(startDestination = Screen.Home) {
-        composable<Screen.Home> { HomeScreen(navController) }
-        composable<Screen.Counter> { CounterScreen(navController) }
-        composable<Screen.TipCalculator> { TipCalculatorScreen(navController) }
-        composable<Screen.Torch> { TorchScreen(navController) }
-        composable<Screen.Ruler> { RulerScreen(navController) }
-        composable<Screen.Magnetometer> { MagnetometerScreen(navController) }
-        composable<Screen.SpiritLevel> { SpiritLevelScreen(navController) }
-        composable<Screen.PlumbBob> { PlumbBobScreen(navController) }
-        composable<Screen.SensorsList> { SensorsListScreen(navController) }
+        composable<Screen.Home> { HomeScreen(onNavigateToTool = { screen -> navController.navigate(screen) }) }
+        composable<Screen.Counter> { CounterScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.TipCalculator> { TipCalculatorScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.Torch> { TorchScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.Ruler> { RulerScreen() }
+        composable<Screen.Magnetometer> { MagnetometerScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.SpiritLevel> { SpiritLevelScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.PlumbBob> { PlumbBobScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.SensorsList> { SensorsListScreen(onNavigateUp = { navController.popBackStack() }) }
     }
     NavHost(
         navController = navController,

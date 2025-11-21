@@ -22,21 +22,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
+import androidx.compose.ui.tooling.preview.Preview
 import com.shresht7.pockettools.ui.components.RadialIntensityIndicator
 import com.shresht7.pockettools.ui.components.WaveformGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MagnetometerScreen(
-    navController: NavController,
+    onNavigateUp: () -> Unit = {},
     viewModel: MagnetometerViewModel = createMagnetometerViewModel()
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -94,4 +94,10 @@ fun MagnetometerUI(
 
         WaveformGraph(state.waveform, modifier = Modifier.fillMaxSize())
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MagnetometerScreenPreview() {
+    MagnetometerScreen()
 }

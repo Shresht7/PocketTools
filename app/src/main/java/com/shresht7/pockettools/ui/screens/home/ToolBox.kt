@@ -12,10 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.shresht7.pockettools.navigation.Screen
 import com.shresht7.pockettools.navigation.Screen.Counter.icon
 
@@ -23,7 +21,7 @@ import com.shresht7.pockettools.navigation.Screen.Counter.icon
 fun ToolBox(
     filtered: List<Screen>,
     screens: List<Screen>,
-    navController: NavController,
+    onNavigate: (Screen) -> Unit,
     started: Boolean
 ) {
     LazyVerticalGrid(
@@ -55,7 +53,7 @@ fun ToolBox(
                 ToolCard(
                     title = screen.title,
                     imageVector = screen.icon,
-                    onClick = { navController.navigate(screen) }
+                    onClick = { onNavigate(screen) }
                 )
             }
         }
@@ -73,5 +71,5 @@ fun ToolBoxPreview() {
         Screen.TipCalculator
     )
     val filtered = screens.filter { it.title.contains("r", true) }
-    ToolBox(filtered, screens, NavController(LocalContext.current), true)
+    ToolBox(filtered, screens, {}, true)
 }

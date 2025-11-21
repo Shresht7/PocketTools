@@ -23,11 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SensorsListScreen(navController: NavController) {
+fun SensorsListScreen(onNavigateUp: () -> Unit = {}) {
     // Retrieve the list of available sensors
     val context = LocalContext.current
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -38,7 +37,7 @@ fun SensorsListScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -72,5 +71,5 @@ fun SensorsListScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun SensorsListScreenPreview() {
-    SensorsListScreen(NavController(LocalContext.current))
+    SensorsListScreen()
 }

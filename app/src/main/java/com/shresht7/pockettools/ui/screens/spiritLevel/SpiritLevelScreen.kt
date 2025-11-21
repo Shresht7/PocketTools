@@ -18,20 +18,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.shresht7.pockettools.sensor.rememberOrientation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpiritLevelScreen(navController: NavController) {
+fun SpiritLevelScreen(onNavigateUp: () -> Unit = {}) {
     val orientation = rememberOrientation()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -72,4 +72,10 @@ fun SpiritLevelScreen(navController: NavController) {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpiritLevelScreenPreview() {
+    SpiritLevelScreen()
 }

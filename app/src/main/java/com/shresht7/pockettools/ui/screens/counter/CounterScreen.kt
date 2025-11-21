@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -44,17 +43,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CounterScreen(navController: NavController) {
+fun CounterScreen(onNavigateUp: () -> Unit = {}) {
     var count by remember { mutableIntStateOf(0) }
     var pressed by remember { mutableStateOf(false) }
-    
+
     val scale by animateFloatAsState(
         targetValue = if (pressed) 0.9f else 1f,
         animationSpec = spring(dampingRatio = 0.4f, stiffness = 300f),
@@ -65,7 +62,7 @@ fun CounterScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -182,5 +179,5 @@ fun AppIconButton(
 @Preview(showBackground = true)
 @Composable
 fun CounterScreenPreview() {
-    CounterScreen(navController = NavController(LocalContext.current))
+    CounterScreen()
 }
