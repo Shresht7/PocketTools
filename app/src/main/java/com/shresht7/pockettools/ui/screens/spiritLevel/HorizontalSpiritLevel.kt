@@ -8,7 +8,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -18,8 +17,6 @@ fun HorizontalSpiritLevel(
     modifier: Modifier,
     bubbleColor: Color = MaterialTheme.colorScheme.primary,
     bubbleRadius: Dp = 14.dp,
-    bubbleBorderWidth: Dp = 2.dp,
-    bubbleBorderColor: Color? = null,
     scaleColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     cornerRadius: CornerRadius = CornerRadius(50f, 50f),
     bubbleTravelRange: Float = 0.5f,
@@ -34,9 +31,8 @@ fun HorizontalSpiritLevel(
         val maxOffset = barWidth * bubbleTravelRange
         val bubbleX = centerX + mapTiltToOffset(roll, maxOffset)
         val bubbleRadiusPx = bubbleRadius.toPx()
-        val bubbleBorderWidthPx = bubbleBorderWidth.toPx()
 
-        // Bar
+        // Draw Vial
         drawRoundRect(
             color = scaleColor,
             topLeft = Offset(centerX - barWidth / 2, centerY - barHeight / 2),
@@ -44,19 +40,11 @@ fun HorizontalSpiritLevel(
             cornerRadius = cornerRadius
         )
 
-        // Bubble
+        // Draw Bubble
         drawCircle(
             color = bubbleColor,
             radius = bubbleRadiusPx,
             center = Offset(bubbleX, centerY)
         )
-        if (bubbleBorderWidth > 0.dp) {
-            drawCircle(
-                color = bubbleBorderColor ?: bubbleColor,
-                radius = bubbleRadiusPx,
-                center = Offset(bubbleX, centerY),
-                style = Stroke(width = bubbleBorderWidthPx)
-            )
-        }
     }
 }
