@@ -7,23 +7,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -39,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.shresht7.pockettools.ui.components.RadialIntensityIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,60 +116,95 @@ fun WiFiScreen(
     }
 }
 
+private fun normalizeRssi(rssi: Int): Float {
+    val minRssi = -100
+    val maxRssi = -40
+    val normalized = (rssi - minRssi).toFloat() / (maxRssi - minRssi).toFloat()
+    return normalized.coerceIn(0f, 1f)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WifiStrengthContent(viewModel: WiFiViewModel) {
     val state by viewModel.state.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
 
-    if (state.isScanning) {
-        CircularProgressIndicator()
-    } else {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                modifier = Modifier.fillMaxWidth()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxSize(0.4f),
+                contentAlignment = Alignment.Center
             ) {
-                TextField(
-                    value = state.selectedSsid ?: "Select a network",
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                RadialIntensityIndicator(
+                    intensity = normalizeRssi(state.signalStrength),
+                    innerRadiusFactor = 0.33f,
+                    outerRadiusFactor = 0.9f,
+                    steps = 10,
+                    dotsPerCircle = 60,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxSize()
                 )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    state.scanResults.map { it.SSID }.distinct().forEach { ssid ->
-                        if (ssid.isNotBlank()) {
-                            DropdownMenuItem(
-                                text = { Text(ssid) },
-                                onClick = {
-                                    viewModel.selectSsid(ssid)
-                                    expanded = false
-                                }
-                            )
+                Text(
+                    text = if (state.selectedSsid != null) "${state.signalStrength} dBm" else "-- dBm",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(state.scanResults, key = { it.BSSID }) { result ->
+                    if (result.SSID.isNotBlank()) {
+                        Card(
+                            onClick = { viewModel.selectSsid(result.SSID) },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = if (result.SSID == state.selectedSsid) {
+                                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                            } else {
+                                CardDefaults.cardColors()
+                            }
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = result.SSID,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Text(
+                                    text = "${result.level} dBm",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
 
-            if (state.selectedSsid != null) {
-                Text(
-                    text = "${state.signalStrength} dBm",
-                    style = MaterialTheme.typography.headlineLarge
-                )
-            }
+        if (state.isScanning) {
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                modifier = Modifier.fillMaxSize()
+            ) {}
+            CircularProgressIndicator()
         }
     }
 }
