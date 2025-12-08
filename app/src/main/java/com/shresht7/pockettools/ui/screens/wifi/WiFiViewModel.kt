@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -29,10 +28,18 @@ class WiFiViewModel(
 
     private var isReceiverRegistered = false
 
+    override fun onCleared() {
+        super.onCleared()
+        if (isReceiverRegistered) {
+            context.unregisterReceiver(wifiScanReceiver)
+        }
+    }
+    
     private val wifiScanReceiver = object : BroadcastReceiver() {
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context, intent: Intent) {
-            val success = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            @Suppress("DEPRECATION")
+            val success = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             } else {
                 true
@@ -53,12 +60,31 @@ class WiFiViewModel(
                 compareByDescending<ScanResult> { it.level }
                     .thenBy { it.SSID }
             )
-            _state.update {
-                val selectedSsid = it.selectedSsid
-                val selectedNetwork = sortedResults.find { result -> result.SSID == selectedSsid }
-                it.copy(
+
+            _state.update { currentState ->
+                var selectedSsid = currentState.selectedSsid
+                var signalStrength = currentState.signalStrength
+
+                // Auto-select the first network if none is currently selected
+                if (selectedSsid == null && sortedResults.isNotEmpty()) {
+                    val firstNetwork = sortedResults.first()
+                    selectedSsid = firstNetwork.SSID
+                    signalStrength = firstNetwork.level
+                } else {
+                    val selectedNetwork = sortedResults.find { result -> result.SSID == selectedSsid }
+                    if (selectedNetwork != null) {
+                        signalStrength = selectedNetwork.level
+                    } else if (selectedSsid != null) {
+                        // The selected network is no longer in scan results
+                        selectedSsid = null
+                        signalStrength = 0
+                    }
+                }
+
+                currentState.copy(
                     scanResults = sortedResults,
-                    signalStrength = selectedNetwork?.level ?: it.signalStrength,
+                    selectedSsid = selectedSsid,
+                    signalStrength = signalStrength,
                     isScanning = false
                 )
             }
