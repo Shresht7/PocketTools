@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Sensors
 import androidx.compose.material.icons.outlined.Straighten
+import androidx.compose.material.icons.outlined.Wifi
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,6 +35,8 @@ sealed class Screen(val route: String, val title: String) {
     data object SpiritLevel: Screen("spirit-level", "Spirit Level")
     @Serializable
     data object PlumbBob: Screen("plumb-bob", "Plumb Bob")
+    @Serializable
+    data object WiFi: Screen("wifi", "WiFi")
 
     val Screen.icon: ImageVector
         get() = when (this) {
@@ -46,6 +49,7 @@ sealed class Screen(val route: String, val title: String) {
             Torch -> Icons.Outlined.FlashlightOn
             SpiritLevel -> Icons.Outlined.Balance
             PlumbBob -> Icons.Outlined.Circle
+            WiFi -> Icons.Outlined.Wifi
         }
 }
 

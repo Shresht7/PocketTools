@@ -14,6 +14,7 @@ import com.shresht7.pockettools.ui.screens.sensors.SensorsListScreen
 import com.shresht7.pockettools.ui.screens.spiritLevel.SpiritLevelScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
+import com.shresht7.pockettools.ui.screens.wifi.WiFiScreen
 
 /**
  * Defines the navigation graph for the application.
@@ -35,6 +36,7 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.SpiritLevel> { SpiritLevelScreen(onNavigateUp = { navController.popBackStack() }) }
         composable<Screen.PlumbBob> { PlumbBobScreen(onNavigateUp = { navController.popBackStack() }) }
         composable<Screen.SensorsList> { SensorsListScreen(onNavigateUp = { navController.popBackStack() }) }
+        composable<Screen.WiFi> { WiFiScreen(onNavigateUp = { navController.popBackStack() }) }
     }
     NavHost(
         navController = navController,

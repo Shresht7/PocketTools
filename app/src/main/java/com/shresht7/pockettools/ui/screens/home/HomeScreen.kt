@@ -35,6 +35,7 @@ fun HomeScreen(onNavigateToTool: (Screen) -> Unit = {}) {
     val screens = listOf(
         Screen.Ruler,
         Screen.Torch,
+        Screen.WiFi,
         Screen.Magnetometer,
         Screen.SpiritLevel,
         Screen.PlumbBob,
