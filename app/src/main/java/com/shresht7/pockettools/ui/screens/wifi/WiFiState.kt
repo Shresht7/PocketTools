@@ -6,4 +6,5 @@ data class WiFiState(
     val scanResults: List<ScanResult> = emptyList(),
     val selectedSsid: String? = null,
     val signalStrength: Int = 0, // This will be RSSI
+    val isScanning: Boolean = false
 )
