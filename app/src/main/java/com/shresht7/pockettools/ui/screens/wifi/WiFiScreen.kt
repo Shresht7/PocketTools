@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -123,10 +124,22 @@ private fun normalizeRssi(rssi: Int): Float {
     return normalized.coerceIn(0f, 1f)
 }
 
+@Composable
+private fun getStrengthColor(rssi: Int): Color {
+    return when {
+        rssi >= -50 -> Color(0xFF4CAF50) // Green 500
+        rssi >= -60 -> Color(0xFF8BC34A) // Light Green 500
+        rssi >= -70 -> Color(0xFFFF9800) // Orange 500
+        else -> Color(0xFFF44336)       // Red 500
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WifiStrengthContent(viewModel: WiFiViewModel) {
     val state by viewModel.state.collectAsState()
+
+    val strengthColor = getStrengthColor(state.signalStrength)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -149,13 +162,13 @@ fun WifiStrengthContent(viewModel: WiFiViewModel) {
                     outerRadiusFactor = 0.9f,
                     steps = 10,
                     dotsPerCircle = 60,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = strengthColor,
                     modifier = Modifier.fillMaxSize()
                 )
                 Text(
                     text = if (state.selectedSsid != null) "${state.signalStrength} dBm" else "-- dBm",
                     style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.primary
+                    color = strengthColor
                 )
             }
 
@@ -167,6 +180,7 @@ fun WifiStrengthContent(viewModel: WiFiViewModel) {
             ) {
                 items(state.scanResults, key = { it.BSSID }) { result ->
                     if (result.SSID.isNotBlank()) {
+                        val itemStrengthColor = getStrengthColor(result.level)
                         Card(
                             onClick = { viewModel.selectSsid(result.SSID) },
                             modifier = Modifier.fillMaxWidth(),
@@ -190,7 +204,7 @@ fun WifiStrengthContent(viewModel: WiFiViewModel) {
                                 Text(
                                     text = "${result.level} dBm",
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = itemStrengthColor
                                 )
                             }
                         }
