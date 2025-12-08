@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.compose.runtime.Composable
@@ -26,6 +27,8 @@ class WiFiViewModel(
     private val _state = MutableStateFlow(WiFiState())
     val state = _state.asStateFlow()
 
+    private var isReceiverRegistered = false
+
     private val wifiScanReceiver = object : BroadcastReceiver() {
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context, intent: Intent) {
@@ -46,30 +49,54 @@ class WiFiViewModel(
     private fun scanSuccess() {
         viewModelScope.launch {
             val results = wifiManager.scanResults
-            _state.update { it.copy(scanResults = results) }
+            val sortedResults = results.sortedWith(
+                compareByDescending<ScanResult> { it.level }
+                    .thenBy { it.SSID }
+            )
+            _state.update {
+                val selectedSsid = it.selectedSsid
+                val selectedNetwork = sortedResults.find { result -> result.SSID == selectedSsid }
+                it.copy(
+                    scanResults = sortedResults,
+                    signalStrength = selectedNetwork?.level ?: it.signalStrength,
+                    isScanning = false
+                )
+            }
         }
     }
 
     private fun scanFailure() {
         viewModelScope.launch {
-            _state.update { it.copy(scanResults = emptyList()) }
+            _state.update { it.copy(scanResults = emptyList(), isScanning = false) }
         }
     }
 
-    fun startScan() {
-        val intentFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
-        context.registerReceiver(wifiScanReceiver, intentFilter)
-        
-        if (!wifiManager.startScan()) {
-            scanFailure()
+    fun startListeningForScans() {
+        if (!isReceiverRegistered) {
+            val intentFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+            context.registerReceiver(wifiScanReceiver, intentFilter)
+            isReceiverRegistered = true
+        }
+        triggerScan()
+    }
+
+    fun stopListeningForScans() {
+        if (isReceiverRegistered) {
+            try {
+                context.unregisterReceiver(wifiScanReceiver)
+            } catch (e: IllegalArgumentException) {
+                // Receiver not registered
+            }
+            isReceiverRegistered = false
         }
     }
 
-    fun stopScan() {
-        try {
-            context.unregisterReceiver(wifiScanReceiver)
-        } catch (e: IllegalArgumentException) {
-            // Receiver not registered
+    fun triggerScan() {
+        viewModelScope.launch {
+            _state.update { it.copy(isScanning = true) }
+            if (!wifiManager.startScan()) {
+                scanFailure()
+            }
         }
     }
 

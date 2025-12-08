@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -66,16 +68,13 @@ fun WiFiScreen(
         }
     }
     
-    LaunchedEffect(hasPermission) {
-        if (hasPermission) {
-            viewModel.startScan()
-        }
-    }
-
     DisposableEffect(hasPermission) {
+        if (hasPermission) {
+            viewModel.startListeningForScans()
+        }
         onDispose {
             if (hasPermission) {
-                viewModel.stopScan()
+                viewModel.stopListeningForScans()
             }
         }
     }
@@ -89,6 +88,13 @@ fun WiFiScreen(
                     }
                 },
                 title = { Text("WiFi Strength") },
+                actions = {
+                    if (hasPermission) {
+                        IconButton(onClick = { viewModel.triggerScan() }) {
+                            Icon(Icons.Filled.Refresh, contentDescription = "Refresh")
+                        }
+                    }
+                }
             )
         }
     ) { padding ->
@@ -113,50 +119,54 @@ fun WifiStrengthContent(viewModel: WiFiViewModel) {
     val state by viewModel.state.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = Modifier.fillMaxWidth()
+    if (state.isScanning && state.scanResults.isEmpty()) {
+        CircularProgressIndicator()
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TextField(
-                value = state.selectedSsid ?: "Select a network",
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
-            )
-            ExposedDropdownMenu(
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier.fillMaxWidth()
             ) {
-                state.scanResults.map { it.SSID }.distinct().forEach { ssid ->
-                    if (ssid.isNotBlank()) {
-                        DropdownMenuItem(
-                            text = { Text(ssid) },
-                            onClick = {
-                                viewModel.selectSsid(ssid)
-                                expanded = false
-                            }
-                        )
+                TextField(
+                    value = state.selectedSsid ?: "Select a network",
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    state.scanResults.map { it.SSID }.distinct().forEach { ssid ->
+                        if (ssid.isNotBlank()) {
+                            DropdownMenuItem(
+                                text = { Text(ssid) },
+                                onClick = {
+                                    viewModel.selectSsid(ssid)
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        if (state.selectedSsid != null) {
-            Text(
-                text = "${state.signalStrength} dBm",
-                style = MaterialTheme.typography.headlineLarge
-            )
+            if (state.selectedSsid != null) {
+                Text(
+                    text = "${state.signalStrength} dBm",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+            }
         }
     }
 }
