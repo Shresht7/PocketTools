@@ -2,6 +2,7 @@ package com.shresht7.pockettools.ui.screens.wifi
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.wifi.ScanResult
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloat
@@ -9,19 +10,24 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -44,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +73,8 @@ fun WiFiScreen(
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
+
+    var showInfoDialog by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -89,6 +99,10 @@ fun WiFiScreen(
         }
     }
 
+    if (showInfoDialog) {
+        DbmInfoDialog(onDismiss = { showInfoDialog = false })
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,6 +113,9 @@ fun WiFiScreen(
                 },
                 title = { Text("WiFi Strength") },
                 actions = {
+                    IconButton(onClick = { showInfoDialog = true }) {
+                        Icon(Icons.Filled.Info, contentDescription = "Information")
+                    }
                     if (hasPermission) {
                         IconButton(onClick = { viewModel.triggerScan() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "Refresh")
@@ -121,6 +138,32 @@ fun WiFiScreen(
             }
         }
     }
+}
+
+@Composable
+fun DbmInfoDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("About dBm") },
+        text = {
+            Column {
+                Text("dBm (decibel-milliwatts) is a standard unit used to measure the power level of an electrical signal, like Wi-Fi.")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("It's a logarithmic scale, where lower (more negative) values indicate a weaker signal.")
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("General Guide:", fontWeight = FontWeight.Bold)
+                Text("• -30 to -50 dBm: Excellent")
+                Text("• -50 to -60 dBm: Good")
+                Text("• -60 to -70 dBm: Fair")
+                Text("• Below -70 dBm: Weak")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -183,65 +226,86 @@ fun WiFiStrength(viewModel: WiFiViewModel) {
         ) {
             items(state.scanResults, key = { it.BSSID }) { result ->
                 if (result.SSID.isNotBlank()) {
-                    val itemStrengthColor = getStrengthColor(result.level)
-                    Card(
-                        onClick = { viewModel.selectSsid(result.SSID) },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = if (result.SSID == state.selectedSsid) {
-                            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                        } else {
-                            CardDefaults.cardColors()
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = result.SSID,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = result.BSSID,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "Security: ${getSecurityType(result)}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "Band: ${getFrequencyBand(result)}, Channel: ${getChannel(result) ?: "N/A"}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .padding(start = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "${result.level} dBm",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = itemStrengthColor,
-                                )
-                                WifiStrengthIcon(
-                                    rssi = result.level,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        }
-                    }
+                    WifiInfoCard(
+                        scanResult = result,
+                        isSelected = result.SSID == state.selectedSsid,
+                        onClick = { viewModel.selectSsid(result.SSID) }
+                    )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WifiInfoCard(
+    scanResult: ScanResult,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val itemStrengthColor = getStrengthColor(scanResult.level)
+
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = if (isSelected) 2.dp else 1.dp,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            ),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = scanResult.SSID,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = scanResult.BSSID,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Security: ${getSecurityType(scanResult)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Band: ${getFrequencyBand(scanResult)}, Channel: ${getChannel(scanResult) ?: "N/A"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = getStrengthLabel(scanResult.level),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = itemStrengthColor
+                )
+                Text(
+                    text = "${scanResult.level} dBm",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = itemStrengthColor,
+                )
             }
         }
     }
