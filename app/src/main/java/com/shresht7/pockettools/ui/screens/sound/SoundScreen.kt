@@ -1,5 +1,6 @@
 package com.shresht7.pockettools.ui.screens.sound
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -52,7 +53,7 @@ fun SoundScreen(
 
     // Permission state for RECORD_AUDIO
     val permissionState = rememberPermissionState(
-        android.Manifest.permission.RECORD_AUDIO
+        Manifest.permission.RECORD_AUDIO
     )
 
     // This effect will start/stop recording based on permission status and lifecycle
@@ -86,7 +87,7 @@ fun SoundScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             if (permissionState.status.isGranted) {
-                DecibelMeterIndicator(amplitude = state.amplitude)
+                SoundUI(state = state)
             } else {
                 PermissionRationale(
                     showRationale = permissionState.status.shouldShowRationale,
@@ -104,22 +105,34 @@ fun SoundScreen(
 }
 
 @Composable
-private fun DecibelMeterIndicator(amplitude: Int) {
-    // The amplitude from AudioRecord is Short, max value is ~32767
-    // We convert it to a 0f to 1f range for the Radial Indicator
-    val intensity = (amplitude / 32767f).coerceIn(0.1f, 1f)
-
-    RadialIntensityIndicator(
-        intensity = intensity,
-        innerRadiusFactor = 0.35f,
-        outerRadiusFactor = 1.5f,
-        steps = 10,
-        dotsPerCircle = 60,
-        color = MaterialTheme.colorScheme.primary,
+fun SoundUI(state: DecibelState) {
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    )
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        // The amplitude from AudioRecord is Short, max value is ~32767
+        // We convert it to a 0f to 1f range for the Radial Indicator
+        val intensity = (state.amplitude / 32767f).coerceIn(0.1f, 1f)
+
+        RadialIntensityIndicator(
+            intensity = intensity,
+            innerRadiusFactor = 0.35f,
+            outerRadiusFactor = 1.5f,
+            steps = 10,
+            dotsPerCircle = 60,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .fillMaxSize(0.8f)
+                .padding(16.dp)
+        )
+
+        WaveformGraph(
+            values = state.waveform,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }
 
 @Composable

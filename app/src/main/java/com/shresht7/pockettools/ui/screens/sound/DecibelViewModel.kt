@@ -59,7 +59,13 @@ class DecibelViewModel(): ViewModel() {
                 if (readSize > 0) {
                     // Find the max amplitude in the buffer
                     val maxAmplitude = buffer.maxOfOrNull { abs(it.toInt()) } ?: 0
-                    _state.update { it.copy(amplitude = maxAmplitude) }
+                    _state.update {
+                        val updatedWaveform = (it.waveform + (maxAmplitude / 32767f)).takeLast(100)
+                        it.copy(
+                            amplitude = maxAmplitude,
+                            waveform = updatedWaveform
+                        )
+                    }
                 }
             }
         }
