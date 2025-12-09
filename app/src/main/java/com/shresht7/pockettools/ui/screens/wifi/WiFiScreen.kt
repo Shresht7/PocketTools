@@ -88,7 +88,7 @@ fun WiFiScreen(
     }
 
     if (showInfoDialog) {
-        InfoDialog(onDismiss = { showInfoDialog = false })
+        WiFiInfoDialog(onDismiss = { showInfoDialog = false })
     }
 
     Scaffold(
