@@ -8,7 +8,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -116,7 +115,7 @@ fun WiFiScreen(
             contentAlignment = Alignment.Center
         ) {
             if (hasPermission) {
-                WifiStrengthContent(viewModel)
+                WiFiStrength(viewModel)
             } else {
                 Text("Location permission is required to scan for WiFi networks.")
             }
@@ -126,7 +125,7 @@ fun WiFiScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WifiStrengthContent(viewModel: WiFiViewModel) {
+fun WiFiStrength(viewModel: WiFiViewModel) {
     val state by viewModel.state.collectAsState()
 
     val animatedIntensity by animateFloatAsState(
