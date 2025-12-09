@@ -46,6 +46,29 @@ internal fun getStrengthColor(rssi: Int): Color {
 
 
 /**
+ * Returns a human-readable label for a Wi-Fi signal's strength based on its RSSI value.
+ *
+ * This function provides a qualitative description of the signal quality:
+ * - "Excellent" for very strong signals (>= -50 dBm).
+ * - "Good" for strong signals (>= -60 dBm).
+ * - "Fair" for fair signals (>= -70 dBm).
+ * - "Weak" for weak signals (< -70 dBm).
+ *
+ * @param rssi The raw RSSI value of the Wi-Fi signal in dBm.
+ * @return A string label representing the signal strength.
+ */
+fun getStrengthLabel(rssi: Int): String {
+    return when {
+        rssi >= -50 -> "Excellent"
+        rssi >= -60 -> "Good"
+        rssi >= -70 -> "Fair"
+        else -> "Weak"
+    }
+}
+
+
+
+/**
  * Determines the security protocol of a Wi-Fi network from its capabilities string.
  *
  * This function parses the `capabilities` string from a [ScanResult] to identify the highest
