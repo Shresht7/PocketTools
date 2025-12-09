@@ -160,8 +160,8 @@ fun WifiStrengthContent(viewModel: WiFiViewModel) {
         ) {
             RadialIntensityIndicator(
                 intensity = if (state.isScanning) pulsingIntensity else animatedIntensity,
-                innerRadiusFactor = 0.33f,
-                outerRadiusFactor = 0.9f,
+                innerRadiusFactor = 0.35f,
+                outerRadiusFactor = 1.5f,
                 steps = 10,
                 dotsPerCircle = 60,
                 color = if (state.isScanning) Color.Gray else getStrengthColor(state.signalStrength),
