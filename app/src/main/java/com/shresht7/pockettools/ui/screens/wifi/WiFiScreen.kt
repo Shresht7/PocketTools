@@ -88,10 +88,6 @@ fun WiFiScreen(
         }
     }
 
-    if (showInfoDialog) {
-        WiFiInfoDialog(onDismiss = { showInfoDialog = false })
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -106,9 +102,6 @@ fun WiFiScreen(
                         IconButton(onClick = { viewModel.triggerScan() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "Refresh")
                         }
-                    }
-                    IconButton(onClick = { showInfoDialog = true }) {
-                        Icon(Icons.Filled.Info, contentDescription = "Information")
                     }
                 }
             )
