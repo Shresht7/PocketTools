@@ -9,6 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -156,13 +157,13 @@ fun WiFiStrength(viewModel: WiFiViewModel) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            RadialIntensityIndicator(
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .clickable { viewModel.triggerScan() },
+                        contentAlignment = Alignment.Center
+                    ) {            RadialIntensityIndicator(
                 intensity = if (state.isScanning) pulsingIntensity else animatedIntensity,
                 innerRadiusFactor = 0.35f,
                 outerRadiusFactor = 1.5f,
