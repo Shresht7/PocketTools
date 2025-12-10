@@ -44,7 +44,14 @@ class LuxMeterViewModel(
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_LIGHT) {
-            _state.value = _state.value.copy(lux = event.values[0])
+            val lux = event.values[0]
+            val intensity = (lux / 40000f).coerceIn(0f, 1f)
+            val newWaveform = (_state.value.waveform + lux).takeLast(100)
+            _state.value = _state.value.copy(
+                lux = lux,
+                intensity = intensity,
+                waveform = newWaveform
+            )
         }
     }
 }
