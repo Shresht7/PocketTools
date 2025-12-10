@@ -39,29 +39,8 @@ fun AppNavHost(navController: NavHostController) {
     val onNavigateUp: () -> Unit = { navController.popBackStack() }
     val onNavigateToTool: (Screen) -> Unit = { screen -> navController.navigate(screen) }
 
-    val screens = listOf(
-        Screen.Ruler,
-        Screen.Torch,
-        Screen.LuxMeter,
-        Screen.Sound,
-        Screen.Geolocation,
-        Screen.Magnetometer,
-        Screen.WiFi,
-        Screen.Barometer,
-        Screen.SpiritLevel,
-        Screen.PlumbBob,
-        Screen.Counter,
-        Screen.TipCalculator,
-        Screen.SensorsList,
-    )
-
     val graph = navController.createGraph(startDestination = Screen.Home) {
-        composable<Screen.Home> {
-            HomeScreen(
-                screens = screens,
-                onNavigateToTool = onNavigateToTool,
-            )
-        }
+        composable<Screen.Home> { HomeScreen(screens = screens, onNavigateToTool = onNavigateToTool,) }
         composable<Screen.Counter> { CounterScreen(onNavigateUp = onNavigateUp) }
         composable<Screen.TipCalculator> { TipCalculatorScreen(onNavigateUp = onNavigateUp) }
         composable<Screen.Torch> { TorchScreen(onNavigateUp = onNavigateUp) }

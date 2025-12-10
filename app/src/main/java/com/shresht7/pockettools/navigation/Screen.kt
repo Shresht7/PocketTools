@@ -79,3 +79,23 @@ sealed class Screen(
     data object LuxMeter : Screen("luxmeter", "Lux Meter", Icons.Outlined.Highlight)
 }
 
+/**
+ * A predefined list of `Screen` objects representing the main tools available in the application.
+ * This list is used to populate the main grid on the home screen.
+ * Note: The `Home` screen itself is not included in this list as it's the container for these tools.
+ */
+internal val screens = listOf(
+    Screen.Ruler,
+    Screen.Torch,
+    Screen.LuxMeter,
+    Screen.Sound,
+    Screen.Geolocation,
+    Screen.Magnetometer,
+    Screen.WiFi,
+    Screen.Barometer,
+    Screen.SpiritLevel,
+    Screen.PlumbBob,
+    Screen.Counter,
+    Screen.TipCalculator,
+    Screen.SensorsList,
+)
