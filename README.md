@@ -1,5 +1,11 @@
 # Android Pocket Tools
 
+<div align="center">
+
+![AppIcon](./app/src/assets/Icon.svg)
+
+</div>
+
 A collection of various tools and utilities on Android.
 
 ## Objectives
