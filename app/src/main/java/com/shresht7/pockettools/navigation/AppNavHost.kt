@@ -18,6 +18,7 @@ import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 import com.shresht7.pockettools.ui.screens.wifi.WiFiScreen
 import com.shresht7.pockettools.ui.screens.geolocation.GeolocationScreen
 import com.shresht7.pockettools.ui.screens.barometer.BarometerScreen
+import com.shresht7.pockettools.ui.screens.luxmeter.LuxMeterScreen
 
 /**
  * Defines the navigation graph for the application.
@@ -49,6 +50,7 @@ fun AppNavHost(navController: NavHostController) {
         Screen.SensorsList,
         Screen.Geolocation,
         Screen.Barometer,
+        Screen.LuxMeter,
     )
 
     val graph = navController.createGraph(startDestination = Screen.Home) {
@@ -70,6 +72,7 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.Sound> { SoundScreen(onNavigateUp = onNavigateUp) }
         composable<Screen.Geolocation> { GeolocationScreen(navController = navController) }
         composable<Screen.Barometer> { BarometerScreen(navController = navController) }
+        composable<Screen.LuxMeter> { LuxMeterScreen(navController = navController) }
     }
     NavHost(
         navController = navController,

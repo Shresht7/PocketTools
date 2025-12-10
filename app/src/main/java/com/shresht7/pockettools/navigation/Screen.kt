@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Balance
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.CompassCalibration
 import androidx.compose.material.icons.outlined.FlashlightOn
+import androidx.compose.material.icons.outlined.Highlight
 import androidx.compose.material.icons.outlined.Compress
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Numbers
@@ -73,5 +74,8 @@ sealed class Screen(
 
     @Serializable
     data object Barometer : Screen("barometer", "Barometer", Icons.Outlined.Compress)
+
+    @Serializable
+    data object LuxMeter : Screen("luxmeter", "Lux Meter", Icons.Outlined.Highlight)
 }
 
