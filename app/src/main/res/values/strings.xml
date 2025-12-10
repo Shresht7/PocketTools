@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pocket Tools</string>
+    <string name="search_placeholder">Search…</string>
+    <string name="search_icon_content_description">Search icon</string>
 </resources>
