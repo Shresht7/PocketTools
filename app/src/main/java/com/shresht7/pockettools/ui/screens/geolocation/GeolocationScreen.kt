@@ -11,7 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.FilterHdr
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -59,9 +64,9 @@ fun GeolocationScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
             if (locationPermissions.allPermissionsGranted) {
                 val state by viewModel.state.collectAsState()
@@ -76,15 +81,32 @@ fun GeolocationScreen(
                 if (state.isFetching) {
                     CircularProgressIndicator()
                 } else {
-                    Text(text = "Latitude: ${state.latitude}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Longitude: ${state.longitude}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Altitude: ${state.altitude}")
-                    Spacer(modifier = Modifier.height(16.dp))
+                    GeolocationCard(
+                        title = "Latitude",
+                        value = String.format("%.2f", state.latitude),
+                        unit = "°",
+                        icon = Icons.Outlined.Place
+                    )
+                    GeolocationCard(
+                        title = "Longitude",
+                        value = String.format("%.2f", state.longitude),
+                        unit = "°",
+                        icon = Icons.Outlined.Explore
+                    )
+                    GeolocationCard(
+                        title = "Altitude",
+                        value = String.format("%.2f", state.altitude),
+                        unit = "m",
+                        icon = Icons.Outlined.FilterHdr
+                    )
+
                     state.address?.let {
-                        Text(text = "Address:")
-                        Text(text = it.getAddressLine(0))
+                        GeolocationCard(
+                            title = "Address",
+                            value = it.getAddressLine(0),
+                            unit = "",
+                            icon = Icons.Outlined.Map
+                        )
                     }
                 }
             } else {

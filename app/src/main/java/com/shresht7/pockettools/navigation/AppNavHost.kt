@@ -16,6 +16,7 @@ import com.shresht7.pockettools.ui.screens.spiritLevel.SpiritLevelScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 import com.shresht7.pockettools.ui.screens.wifi.WiFiScreen
+import com.shresht7.pockettools.ui.screens.geolocation.GeolocationScreen
 
 /**
  * Defines the navigation graph for the application.
@@ -45,6 +46,7 @@ fun AppNavHost(navController: NavHostController) {
         Screen.Counter,
         Screen.TipCalculator,
         Screen.SensorsList,
+        Screen.Geolocation,
     )
 
     val graph = navController.createGraph(startDestination = Screen.Home) {
@@ -64,6 +66,7 @@ fun AppNavHost(navController: NavHostController) {
         composable<Screen.SensorsList> { SensorsListScreen(onNavigateUp = onNavigateUp) }
         composable<Screen.WiFi> { WiFiScreen(onNavigateUp = onNavigateUp) }
         composable<Screen.Sound> { SoundScreen(onNavigateUp = onNavigateUp) }
+        composable<Screen.Geolocation> { GeolocationScreen(navController = navController) }
     }
     NavHost(
         navController = navController,
