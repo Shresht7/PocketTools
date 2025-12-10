@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.accompanist.permissions)
+    implementation(libs.play.services.location)
 }
