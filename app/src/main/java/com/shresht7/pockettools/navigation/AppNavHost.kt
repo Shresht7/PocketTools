@@ -35,22 +35,24 @@ import com.shresht7.pockettools.ui.screens.wifi.WiFiScreen
  */
 @Composable
 fun AppNavHost(navController: NavHostController) {
+
     val onNavigateUp: () -> Unit = { navController.popBackStack() }
     val onNavigateToTool: (Screen) -> Unit = { screen -> navController.navigate(screen) }
+
     val screens = listOf(
         Screen.Ruler,
         Screen.Torch,
-        Screen.WiFi,
-        Screen.Magnetometer,
+        Screen.LuxMeter,
         Screen.Sound,
+        Screen.Geolocation,
+        Screen.Magnetometer,
+        Screen.WiFi,
+        Screen.Barometer,
         Screen.SpiritLevel,
         Screen.PlumbBob,
         Screen.Counter,
         Screen.TipCalculator,
         Screen.SensorsList,
-        Screen.Geolocation,
-        Screen.Barometer,
-        Screen.LuxMeter,
     )
 
     val graph = navController.createGraph(startDestination = Screen.Home) {

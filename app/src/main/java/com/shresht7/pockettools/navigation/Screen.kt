@@ -67,7 +67,7 @@ sealed class Screen(
     data object WiFi : Screen("wifi", "WiFi", Icons.Outlined.Wifi)
 
     @Serializable
-    data object Sound : Screen("sound", "Sound", Icons.Outlined.Speaker)
+    data object Sound : Screen("sound", "Sound Meter", Icons.Outlined.Speaker)
 
     @Serializable
     data object Geolocation : Screen("geolocation", "Geolocation", Icons.Outlined.MyLocation)
