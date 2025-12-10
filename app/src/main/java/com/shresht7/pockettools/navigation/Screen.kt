@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Balance
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.CompassCalibration
 import androidx.compose.material.icons.outlined.FlashlightOn
+import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Sensors
@@ -65,5 +66,8 @@ sealed class Screen(
 
     @Serializable
     data object Sound : Screen("sound", "Sound", Icons.Outlined.Speaker)
+
+    @Serializable
+    data object Geolocation : Screen("geolocation", "Geolocation", Icons.Outlined.MyLocation)
 }
 
