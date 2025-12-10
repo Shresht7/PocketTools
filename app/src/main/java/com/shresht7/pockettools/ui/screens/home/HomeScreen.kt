@@ -23,28 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.shresht7.pockettools.R
 import com.shresht7.pockettools.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onNavigateToTool: (Screen) -> Unit = {}) {
-
-    /* The list of tools (in order) to show on the home-page */
-    val screens = listOf(
-        Screen.Ruler,
-        Screen.Torch,
-        Screen.WiFi,
-        Screen.Magnetometer,
-        Screen.Sound,
-        Screen.SpiritLevel,
-        Screen.PlumbBob,
-        Screen.Counter,
-        Screen.TipCalculator,
-        Screen.SensorsList,
-    )
-
+fun HomeScreen(
+    screens: List<Screen> = emptyList(),
+    onNavigateToTool: (Screen) -> Unit = {}
+) {
     var query by remember { mutableStateOf("") }
     val filtered = screens.filter { it.title.contains(query, true) }
 
@@ -90,5 +77,17 @@ fun HomeScreen(onNavigateToTool: (Screen) -> Unit = {}) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    val screens = listOf(
+        Screen.Ruler,
+        Screen.Torch,
+        Screen.WiFi,
+        Screen.Magnetometer,
+        Screen.Sound,
+        Screen.SpiritLevel,
+        Screen.PlumbBob,
+        Screen.Counter,
+        Screen.TipCalculator,
+        Screen.SensorsList,
+    )
+    HomeScreen(screens = screens)
 }
