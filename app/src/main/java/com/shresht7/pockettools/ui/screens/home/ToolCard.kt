@@ -34,12 +34,27 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.shresht7.pockettools.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * A composable function that displays an interactive card for a single tool.
+ *
+ * This card features a title, an optional background icon, and interactive press animations.
+ * When pressed, the card scales down, its elevation changes, and its alpha reduces slightly,
+ * providing visual feedback to the user before navigating to the corresponding tool screen.
+ *
+ * @param title The title of the tool to be displayed on the card.
+ * @param onClick A callback function that is invoked when the card is clicked.
+ * @param imageVector An optional [ImageVector] to be displayed as a background icon on the card.
+ *                    If `null`, no icon is displayed.
+ * @param borderStroke The [BorderStroke] to apply to the card's outline.
+ * @param shape The [Shape] of the card, defining its corners.
+ */
 @Composable
 fun ToolCard(
     title: String,
@@ -105,7 +120,7 @@ fun ToolCard(
             if (imageVector != null) {
                 Icon(
                     imageVector = imageVector,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.tool_icon_content_description, title),
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
