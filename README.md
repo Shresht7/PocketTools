@@ -6,7 +6,7 @@
 
 </div>
 
-A collection of various tools and utilities on Android.
+A collection of various tools and utilities for Android devices. 
 
 <div align="center">
     <img src="./screenshots/Screenshot_PocketTools.png" width="30%" />
@@ -28,20 +28,20 @@ A collection of various tools and utilities on Android.
 
 ## Features
 
-The app contains several utility screens, including:
+The app contains several utility tools, including:
 
-- Barometer
-- Counter
-- Flashlight (Torch)
-- Geolocation
-- Luxmeter
-- Magnetometer
-- Plumb Bob
 - Ruler
+- Flashlight (Torch)
+- Luxmeter
 - Sound (Decibel)
-- Spirit Level
-- Tip Calculator
+- Magnetometer
+- Barometer
+- Geolocation
 - WiFi
+- Plumb Bob
+- Spirit Level
+- Counter
+- Tip Calculator
 
 ---
 
