@@ -16,6 +16,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shresht7.pockettools.navigation.Screen
 
+/**
+ * A composable that displays a grid of interactive tool cards.
+ *
+ * This component uses `LazyVerticalGrid` to efficiently render a scrollable grid of tool cards.
+ * Each card represents a [Screen] (tool) and can navigate to that tool's specific screen when clicked.
+ * The tools are displayed with a staggered animation when the `started` flag is true.
+ *
+ * @param filtered The list of [Screen] objects to display in the grid after applying a filter.
+ * @param screens The original, unfiltered list of all [Screen] objects. Used to calculate
+ *                animation delays based on the original order.
+ * @param onNavigate A callback function that is invoked when a tool card is clicked,
+ *                   triggering navigation to the selected [Screen].
+ * @param started A boolean flag that, when true, triggers the initial animation of the tool cards.
+ */
 @Composable
 fun ToolBox(
     filtered: List<Screen>,
