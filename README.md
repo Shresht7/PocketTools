@@ -8,6 +8,11 @@
 
 A collection of various tools and utilities on Android.
 
+
+![Screenshot: PocketTools](./screenshots/Screenshot_PocketTools.png)
+![Screenshot: Magnetometer](./screenshots/Screenshot_Magnetometer.png)
+![Screenshot: Spirit Level](./screenshots/Screenshot_SpiritLevel.png)
+
 ## Objectives
 
 - Learn Native Android Development using Kotlin and Jetpack Compose
