@@ -44,7 +44,14 @@ class BarometerViewModel(
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
-            _state.value = _state.value.copy(pressure = event.values[0])
+            val pressure = event.values[0]
+            val intensity = ((pressure - 950f) / 100f).coerceIn(0f, 1f)
+            val newWaveform = (_state.value.waveform + pressure).takeLast(100)
+            _state.value = _state.value.copy(
+                pressure = pressure,
+                intensity = intensity,
+                waveform = newWaveform
+            )
         }
     }
 }

@@ -1,12 +1,15 @@
 package com.shresht7.pockettools.navigation
 
+import BarometerScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.createGraph
 import com.shresht7.pockettools.ui.screens.counter.CounterScreen
+import com.shresht7.pockettools.ui.screens.geolocation.GeolocationScreen
 import com.shresht7.pockettools.ui.screens.home.HomeScreen
+import com.shresht7.pockettools.ui.screens.luxmeter.LuxMeterScreen
 import com.shresht7.pockettools.ui.screens.magnetometer.MagnetometerScreen
 import com.shresht7.pockettools.ui.screens.plumbBob.PlumbBobScreen
 import com.shresht7.pockettools.ui.screens.ruler.RulerScreen
@@ -16,9 +19,6 @@ import com.shresht7.pockettools.ui.screens.spiritLevel.SpiritLevelScreen
 import com.shresht7.pockettools.ui.screens.tipCalculator.TipCalculatorScreen
 import com.shresht7.pockettools.ui.screens.torch.TorchScreen
 import com.shresht7.pockettools.ui.screens.wifi.WiFiScreen
-import com.shresht7.pockettools.ui.screens.geolocation.GeolocationScreen
-import com.shresht7.pockettools.ui.screens.barometer.BarometerScreen
-import com.shresht7.pockettools.ui.screens.luxmeter.LuxMeterScreen
 
 /**
  * Defines the navigation graph for the application.
